@@ -8,3 +8,8 @@ Project Members: Keegan Sepiol (back-end), Nicholas Sardinia (back-end), Gabriel
 
 User Stories: 
 A customer wants the ability to sort his database based on name, acquisition date, or number of available items so they can monitor supply levels. 
+A user wants to be able to create statistics and visualizations based off their data to present to potential investors. 
+A customer wants to be able to invite collaborators to view and modify their company's database platform so they can expand their productive workforce.
+A consumer desires for the ability to restrict access to more sensitve aspects of their database so that their product remains secure.
+The consumer hopes to be able to add and remove items to the database so they can accurately reflect current supply levels in their warehouse.
+The customer is looking to see updated shipping times for supply so they can estimate if consumers will be able to get their product before a designated date. 
