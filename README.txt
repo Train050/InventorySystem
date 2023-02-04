@@ -16,5 +16,5 @@ User Stories:
 7) An administrator would like to see who is currently a collaborator on their data and the security access of the individuals so they can ensure their data is secure.
 8) The client would like the ability to restock their most sold goods and formulate estimates for future sales based on past trends so they can ensure they will have the supply needed when periods of high demand occurs.
 9) A user wants a log-in page that continues to their database so they can have a secure and personalized experience to access their database.
-10) An owner would like the ability to group employees into specific groups so they can work together on a specialized task without seeing senesitive information outside of their scope.
+10) An owner would like the ability to group employees into specific groups based on their roles so they can collaborate on projects.
 11) A customer would like their log-in infomration to be encrypted to ensure the security of their personal data.
