@@ -18,3 +18,7 @@ User Stories:
 9) A user wants a log-in page that continues to their database so they can have a secure and personalized experience to access their database.
 10) An owner would like the ability to group employees into specific groups based on their roles so they can collaborate on projects.
 11) A customer would like their log-in infomration to be encrypted to ensure the security of their personal data.
+
+UI stories: 
+1. pags [inventory(auth),]
+2. 
