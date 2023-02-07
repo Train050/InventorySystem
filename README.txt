@@ -26,4 +26,4 @@ UI stories:
     add/remove inventory item
     update on delivery date
     reflection of supply level
-3. 
+
