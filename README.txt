@@ -20,5 +20,10 @@ User Stories:
 11) A customer would like their log-in infomration to be encrypted to ensure the security of their personal data.
 
 UI stories: 
-1. pags [inventory(auth),]
-2. 
+1. pages [inventory data, login(authorization), landing page]
+2. inventory data: 
+    sorting based on column (ascending/descending data)
+    add/remove inventory item
+    update on delivery date
+    reflection of supply level
+3. 
