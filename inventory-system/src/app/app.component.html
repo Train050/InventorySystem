@@ -1,12 +1,12 @@
 <mat-grid-list>
   <!-- nav -->
   <mat-grid-list>
-    <button mat-button color="primary">Home</button>
-    <button mat-button color="primary">Login</button>
-    <button mat-button color="primary">Landing</button>
+    <button mat-button color="primary" routerLink="/inventory-home-page">Home</button>
+    <button mat-button color="primary" routerLink="/login-page">Login</button>
+    <button mat-button color="primary" routerLink="/landing-page">Landing</button>
   </mat-grid-list>
 
   <!-- main content -->
-
+  <router-outlet></router-outlet>
   <!-- footer -->
 </mat-grid-list>
