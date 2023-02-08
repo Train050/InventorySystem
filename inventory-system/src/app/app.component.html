@@ -1,12 +1,28 @@
 <mat-grid-list>
   <!-- nav -->
-  <mat-grid-list>
+  <!-- <mat-grid-list>
 
-    <button mat-button color="primary" routerLink="/inventory-home-page">Home</button>
-    <button mat-button color="primary" routerLink="/login-page">Login</button>
-    <button mat-button color="primary" routerLink="/landing-page">Inventory</button>
-  </mat-grid-list>
+    <button mat-raised-button color="primary" routerLink="/inventory-home-page">Home</button>
+    <button mat-raised-button color="primary" routerLink="/login-page">Login</button>
+    <button mat-raised-button color="primary" routerLink="/landing-page">Inventory</button>
+  </mat-grid-list> -->
+  <button mat-button [matMenuTriggerFor]="beforeMenu" routerLink="/landing-page">Landing</button>
+  <mat-menu #beforeMenu="matMenu" xPosition="before">
+    <button mat-menu-item>Item 1</button>
+    <button mat-menu-item>Item 2</button>
+  </mat-menu>
 
+  <button mat-button [matMenuTriggerFor]="aboveMenu" routerLink="/inventory-home-page">Inventory</button>
+  <mat-menu #aboveMenu="matMenu" yPosition="above">
+    <button mat-menu-item>Item 1</button>
+    <button mat-menu-item>Item 2</button>
+  </mat-menu>
+
+  <button mat-button [matMenuTriggerFor]="belowMenu" routerLink="/login-page">Login</button>
+  <mat-menu #belowMenu="matMenu" yPosition="below">
+    <button mat-menu-item>Item 1</button>
+    <button mat-menu-item>Item 2</button>
+  </mat-menu>
   <!-- main content -->
   <router-outlet></router-outlet>
   <!-- footer -->
