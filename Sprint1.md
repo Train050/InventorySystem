@@ -20,4 +20,4 @@ Successfully completed goals:
 Our group was able to get the pages for the inventory system, login page, and registration page set up. 
 
 Unsuccessful goals:
-The team was not able to get the database system fully working and integrated into the front end environment so that users can register. The team also still needs to integrate the backend database so that new items can be added and then removed.
+The team was not able to get the database system fully working and integrated into the front end environment so that users can register. The team also still needs to integrate the backend database so that new items can be added and then removed. We are also needing to correct the linking of the registration page to the registration button on the login page. We currently have a tab to demonstrate the login page but intend for only the button to remain to link the pages.
