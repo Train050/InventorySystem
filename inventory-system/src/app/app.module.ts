@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,6 +13,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule} from '@angular/material/menu';
 import { MatTableModule} from '@angular/material/table';
 import { RegistrationPageComponent } from './pages/registration-page/registration-page.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { JwtInterceptor } from './jwt.interceptor';
 
 @NgModule({
   declarations: [
@@ -20,6 +23,7 @@ import { RegistrationPageComponent } from './pages/registration-page/registratio
     LandingPageComponent,
     InventoryHomePageComponent,
     RegistrationPageComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -29,9 +33,11 @@ import { RegistrationPageComponent } from './pages/registration-page/registratio
     BrowserAnimationsModule,
     MatButtonModule,
     MatMenuModule,
+    HttpClientModule,
+    FormsModule,
     MatTableModule
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
