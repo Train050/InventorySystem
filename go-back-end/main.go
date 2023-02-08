@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -80,7 +79,6 @@ func main() {
 	r := gin.Default()
 
 	config := cors.DefaultConfig()
-	host := "127.0.0.1:4200"
 
 	config.AllowHeaders = []string{"Authorization", "content-type"}
 	config.AllowOrigins = []string{"http://localhost:4200"}
@@ -120,10 +118,6 @@ func main() {
 		tokenString, err := token.SignedString(jwtKey)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, "")
-		}
-
-		if err := http.ListenAndServe(host, httpHandler()); err != nil {
-			log.Fatalf("Failed to listen on %s: %v", host, err)
 		}
 
 		c.JSON(http.StatusOK, gin.H{
