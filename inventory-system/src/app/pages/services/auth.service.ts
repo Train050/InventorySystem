@@ -14,4 +14,16 @@ export class AuthService {
       return 403;
     }
   }
+
+  registration(uname: string, pword: string, email: string, phoneNumber: string)
+  {
+    if (uname === '' || pword === '' || email === '' || phoneNumber === '')
+    {
+      return 403;
+    }
+    else
+    {
+      return 200;
+    }
+  }
 }

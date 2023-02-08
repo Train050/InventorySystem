@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
 import { InventoryHomePageComponent } from './pages/inventory-home-page/inventory-home-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { RegistrationPageComponent } from './pages/registration-page/registration-page.component';
 
 const routes: Routes = [
   { path: 'landing-page', component: LandingPageComponent },
@@ -11,6 +12,7 @@ const routes: Routes = [
     component: InventoryHomePageComponent,
   },
   { path: 'login-page', component: LoginPageComponent },
+  { path: 'registration-page', component: RegistrationPageComponent}
 ];
 
 @NgModule({
