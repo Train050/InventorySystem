@@ -1,23 +1,18 @@
-
-<div class="login-container">
-  <div class="logo"> Inventory Management System </div>
-  <div class="desc">
-      Welcome to the World's Best Inventory Management System!
-  </div>
-
-  <div class="login-form">
-      <div class="form-group">
-          <label for="uname">Username</label>
-          <input type="text" name="uname" class="form-control" [(ngModel)]="username" />
-      </div>
-      <div class="form-group">
-          <label for="pword">Password</label>
-          <input type="password" name="pword" class="form-control" [(ngModel)]="password" />
-      </div>
-      <div class="btn-container">
-          <div class="error">{{ errorMsg }}</div>
-          <button class="btn btn-dark" (click)="login()">Login</button>
-          <button class="btn btn-dark" routerLink="./registration-page">Registration</button>
-      </div>
-  </div>
+<div *ngIf="!isLogin">
+    <h3>Register Account</h3>
+    <input [(ngModel)]="registerFirstName" type="text" placeholder="First Name" />
+    <input [(ngModel)]="registerLastName" type="text" placeholder="Last Name" />
+    <input [(ngModel)]="registerEmail" type="email" placeholder="Email" />
+    <input [(ngModel)]="registerPassword" type="password" placeholder="Password" />
+    <button (click)="register()" [disabled]="!registerFirstName || !registerLastName || !registerEmail || !registerPassword" >Register</button>
+    <button (click)="isLogin=true">Have an Account?</button>
 </div>
+
+<div *ngIf="isLogin">
+    <h3>Login</h3>
+    <input [(ngModel)]="loginEmail" type="email" placeholder="Email" />
+    <input [(ngModel)]="loginPassword" type="password" placeholder="Password" />
+    <button (click)="login()" [disabled]="!loginEmail || !loginPassword" >Login</button>
+    <button (click)="isLogin=false">Register an Account?</button>
+</div>
+
