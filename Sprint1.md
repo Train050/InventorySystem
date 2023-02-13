@@ -11,6 +11,8 @@ User Stories:
 8) The client would like the ability to restock their most sold goods and formulate estimates for future sales based on past trends so they can ensure they will have the supply needed when periods of high demand occurs.
 9) A user wants a log-in page that continues to their database so they can have a secure and personalized experience to access their database.
 10) An owner would like the ability to group employees into specific groups based on their roles so they can collaborate on projects.
+
+
 11) A customer would like their login infomration to be encrypted to ensure the security of their personal data.
 12) A new user would like to be able to create an account through a registration page so they can log in and use the database.
 13) An existing client would like a way to recover their password or username on the occasion that they forget it so they can regain control of their account and access to the database.
@@ -24,3 +26,4 @@ Our group was able to get the pages for the inventory system, login page, and re
 
 Unsuccessful goals:
 The team wasn't able to get the database system fully working and integrated into the front end environment so that users can register new accounts that work with the login page. The team is still trying to integrate the backend database into the inventory page so that new items can be added and then removed. We are also needing to correct the linking of the registration page to the registration button on the login page. We currently have a tab to demonstrate the login page but intend for only the button to remain to link the pages.
+
