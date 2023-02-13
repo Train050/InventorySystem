@@ -1,1 +1,18 @@
-<p>login-page works!</p>
+<div *ngIf="!isLogin">
+    <h3>Register Account</h3>
+    <input [(ngModel)]="registerFirstName" type="text" placeholder="First Name" />
+    <input [(ngModel)]="registerLastName" type="text" placeholder="Last Name" />
+    <input [(ngModel)]="registerEmail" type="email" placeholder="Email" />
+    <input [(ngModel)]="registerPassword" type="password" placeholder="Password" />
+    <button (click)="register()" [disabled]="!registerFirstName || !registerLastName || !registerEmail || !registerPassword" >Register</button>
+    <button (click)="isLogin=true">Have an Account?</button>
+</div>
+
+<div *ngIf="isLogin">
+    <h3>Login</h3>
+    <input [(ngModel)]="loginEmail" type="email" placeholder="Email" />
+    <input [(ngModel)]="loginPassword" type="password" placeholder="Password" />
+    <button (click)="login()" [disabled]="!loginEmail || !loginPassword" >Login</button>
+    <button (click)="isLogin=false">Register an Account?</button>
+</div>
+
