@@ -15,7 +15,8 @@ import { MatTableModule} from '@angular/material/table';
 import { RegistrationPageComponent } from './pages/registration-page/registration-page.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { JwtInterceptor } from './jwt.interceptor';
-
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatPaginatorModule} from '@angular/material/paginator';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,7 +36,9 @@ import { JwtInterceptor } from './jwt.interceptor';
     MatMenuModule,
     HttpClientModule,
     FormsModule,
-    MatTableModule
+    MatTableModule,
+    MatFormFieldModule,
+    MatPaginatorModule
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}],
   bootstrap: [AppComponent],
