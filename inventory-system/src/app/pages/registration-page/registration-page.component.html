@@ -1,0 +1,29 @@
+<p>The registration page is working!</p>
+<div class="registration-container">
+  <div class="desc">
+      Registration form
+  </div>
+
+  <div class="registration-form">
+      <div class="form-group">
+          <label for="uname">Username</label>
+          <input type="text" name="uname" class="form-control" [(ngModel)]="username" />
+      </div>
+      <div class="form-group">
+          <label for="pword">Password</label>
+          <input type="password" name="pword" class="form-control" [(ngModel)]="password" />
+      </div>
+      <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" class ="form-control" [(ngModel)]="email"/>
+      </div>
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="phonenumber" name="phoneNumber" class ="form-control" [(ngModel)]="phoneNumber"/>
+  </div>
+      <div class="btn-container">
+          <div class="error">{{ errorMsg }}</div>
+          <button class="btn btn-dark" (click)="registration()">Register</button>
+      </div>
+  </div>
+</div>

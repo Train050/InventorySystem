@@ -6,7 +6,7 @@
     <button mat-raised-button color="primary" routerLink="/login-page">Login</button>
     <button mat-raised-button color="primary" routerLink="/landing-page">Inventory</button>
   </mat-grid-list> -->
-  <button mat-button [matMenuTriggerFor]="beforeMenu" routerLink="/landing-page">Landing</button>
+  <button mat-button [matMenuTriggerFor]="beforeMenu" routerLink="/landing-page">Home</button>
   <mat-menu #beforeMenu="matMenu" xPosition="before">
     <button mat-menu-item>Item 1</button>
     <button mat-menu-item>Item 2</button>
@@ -23,6 +23,8 @@
     <button mat-menu-item>Item 1</button>
     <button mat-menu-item>Item 2</button>
   </mat-menu>
+
+  <button mat-button [matMenuTriggerFor]="belowMenu" routerLink="/registration-page">Registration</button>
   <!-- main content -->
   <router-outlet></router-outlet>
   <!-- footer -->
