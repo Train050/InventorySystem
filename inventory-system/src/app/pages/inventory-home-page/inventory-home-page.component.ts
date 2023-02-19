@@ -48,7 +48,7 @@ const NAMES: string[] = [
   templateUrl: './inventory-home-page.component.html',
   styleUrls: ['./inventory-home-page.component.scss']
 })
-export class InventoryHomePageComponent {
+export class InventoryHomePageComponent implements AfterViewInit{
   displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
   dataSource: MatTableDataSource<UserData>;
 

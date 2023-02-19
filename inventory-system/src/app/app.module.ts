@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,6 +16,8 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { JwtInterceptor } from './jwt.interceptor';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatNativeDateModule} from '@angular/material/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +39,9 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     FormsModule,
     MatTableModule,
     MatFormFieldModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatNativeDateModule,
+    ReactiveFormsModule
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}],
   bootstrap: [AppComponent],
