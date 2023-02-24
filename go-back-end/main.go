@@ -41,6 +41,9 @@ type Tabler interface {
 	TableName() string
 }
 
+//sqlite3 start of code
+//opens file if it exists
+
 // TableName overrides the table name used by User to `profiles`
 func (User) TableName() string {
 	return "user"
