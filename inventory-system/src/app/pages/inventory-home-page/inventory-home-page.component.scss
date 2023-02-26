@@ -1,25 +1,12 @@
-.demo-table {
+table {
   width: 100%;
 }
 
-.mat-column-demo-position {
-  width: 32px;
-  border-right: 1px solid currentColor;
-  padding-right: 24px;
-  text-align: center;
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
 }
 
-.mat-column-demo-name {
-  padding-left: 16px;
-  font-size: 20px;
-}
-
-.mat-column-demo-weight {
-  font-style: italic;
-}
-
-.mat-column-demo-symbol {
-  width: 32px;
-  text-align: center;
-  font-weight: bold;
+td, th {
+  width: 25%;
 }

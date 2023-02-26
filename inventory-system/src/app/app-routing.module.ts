@@ -7,6 +7,7 @@ import { InventoryHomePageComponent } from './pages/inventory-home-page/inventor
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { RegistrationPageComponent } from './pages/registration-page/registration-page.component';
 
+
 const routes: Routes = [
   { path: 'landing-page', component: LandingPageComponent },
   {
