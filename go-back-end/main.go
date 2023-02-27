@@ -16,7 +16,7 @@ import (
 
 type User struct {
 	gorm.Model 
-	ID uint 'gorm:"primaryKey"'
+	ID uint
 	UserName string
 	password string 
 	email string
@@ -101,50 +101,27 @@ func main() {
 	}).Methods("POST")
 
 //this is the route for creating a new user into the database
-	router.HandleFunc("/login-page", func(w http.ResponseWriter, r *http.Request) {
+	router.HandleFunc("/inventory-home-page", func(w http.ResponseWriter, r *http.Request) {
 		//creating a new user variable
-		var user User
+		var inventory Inventory
 		
 		//creating the new user in the database
-		newUser := DB.Create(&user)
+		newInventory := DB.Create(&inventory)
 
-		if newUser.Error != nil{
-			c.Status(400)
+		if newInventory.Error != nil{
+			http.Error(w, newInventory.Error.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		//returning the created user to frontend
 		w.Header().Set("Content-Type", "application/json")
-		err := json.NewEncoder(w).Encode(&user)
-
-		if (err != nil) {
-			c.status(400)
-			return
-		}
-		
-	}).Methods("POST")
-
-		//this is the route for creating a new user into the database
-	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		//creating a new user variable
-		var user User
-		
-		//creating the new user in the database
-		newUser := DB.Create(&user)
-
-		if newUser.Error != nil{
-			http.Error(w, newUser.Error.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		//returning the created user to frontend
-		w.Header().Set("Content-Type", "application/json")
-		err := json.NewEncoder(w).Encode(&user)
+		err := json.NewEncoder(w).Encode(&newInventory)
 
 		if (err != nil) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	}).Methods("POST")
+
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
