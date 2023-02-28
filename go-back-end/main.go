@@ -9,119 +9,262 @@ import (
 	//for use with json files
 	//initializers "inventory-system/initializers"
 
+	//"github.com/mattn/go-sqlite3"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 type User struct {
-	gorm.Model 
-	ID uint
-	UserName string
-	password string 
-	email string
-	phoneNumber string
+	ID 			uint //'gorm:"primaryKey"'
+	Username    string //'gorm:"unique"'
+	Password    string
+	Email       string	//'gorm:"unique"'
+	PhoneNumber string	//'gorm:"unique"'
 }
 
 type Inventory struct {
-	gorm.Model
-	ID uint 
-	productName string
-	dateAcquired string
-	productAmount uint
+	ID            uint //'gorm:"primaryKey"'
+	ProductName   string //'gorm:"unique"'
+	DateAcquired  string
+	ProductAmount uint
 }
 
-/*
-func addUser(id uint, username string, password string, email string, phoneNumber string) {
-
-}
-
-
-func addInventory(id uint, product string, date string, amount uint) {
-
-}
-*/
-
-func handleInventoryGet(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
-	product := vars["productName"]
-	date := vars["dateAquired"]
-	amount := vars["productAmount"]
-
-	fmt.Fprintf(w, "Requested info: %s id, %s product, %s acquisition date, %s amount of product.", id, product, date, amount)
-}
-
-func handleUserGet(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	username := vars["username"]
-	password := vars["password"]
-	email := vars["email"]
-	phoneNumber := vars["phone number"]
-
-	fmt.Fprintf(w, "Requested info: %s username with %s password, %s email, %s phone number\n", username, password, email, phoneNumber)
-}
+var db *gorm.DB
+var err error
 
 func main() {
 	router := mux.NewRouter()
 
-	var err error
-	var DB *gorm.DB
+	//opens the SQLite3 database inventory (or creates it if it doesn't exist)
+	db, err = gorm.Open(sqlite.Open("inventory.db"), &gorm.Config{})
 
-	DB, err = gorm.Open(sqlite.Open("inventory.db"), &gorm.Config{})
-
+	//in the event that the database can't be opened
 	if err != nil {
-		log.Fatal("Failed to connect to the database.")
+		log.Fatal("Failed to connect to the database.",)
 	}
+
+	//create the tables in inventory if they don't already exist
+	db.AutoMigrate(&User{}, &Inventory{})
+
+	//Creating route definitions for login page
+	//routes for getting the information of the user
+	router.HandleFunc("/login/{ID}", getUserWithID).Methods("GET")
+	router.HandleFunc("/login/{Username}", getUserWithUsername).Methods("GET")
+	router.HandleFunc("/login/{Email}", getUserWithEmail).Methods("GET")
+	router.HandleFunc("/login", getAllUsers).Methods("GET")
+
+	//routes for updating the user information
+	router.HandleFunc("/login/{ID}", updateUserById).Methods("PUT")
+	router.HandleFunc("/login/{Username}", updateUserByUsername).Methods("PUT")
+
+	//routes for deleting the user based on input field (All unique attributes)
+	router.HandleFunc("/login/{ID}", removeUserByID).Methods("DELETE")
+	router.HandleFunc("/login/{Username}", removeUserByUsername).Methods("DELETE")
+	router.HandleFunc("/login/{Email}", removeUserByEmail).Methods("DELETE")
 	
-	DB.AutoMigrate(&User{})
-	DB.AutoMigrate(&Inventory{})
+	//Creating route definitions for registration page (just creating a new user)
+	router.HandleFunc("/registration", makeUser).Methods("POST")
 
-	//this is the route for creating a new user into the database
-	router.HandleFunc("/login-page", func(w http.ResponseWriter, r *http.Request) {
-		//creating a new user variable
-		var user User
-		
-		//creating the new user in the database
-		newUser := DB.Create(&user)
+	//Creating route definitions for inventory page (waiting for front end to send inventory json)
+	//route for creating a new item
+	router.HandleFunc("/inventory", makeItem).Methods("POST")
 
-		if newUser.Error != nil{
-			http.Error(w, newUser.Error.Error(), http.StatusInternalServerError)
-			return
-		}
+	//routes for getting the information of items in the inventory
+	router.HandleFunc("/inventory/{ID}", getItemWithID).Methods("GET")
+	router.HandleFunc("/inventory/{ProductName}", getItemWithName).Methods("GET")
+	router.HandleFunc("/inventory/{DateAcquired}", getFirstItemWithDate).Methods("GET")
+	router.HandleFunc("/inventory/{DateAcquired}", getItemsWithDate).Methods("GET")
+	router.HandleFunc("/inventory", getAllItems).Methods("GET")
 
-		//returning the created user to frontend
-		w.Header().Set("Content-Type", "application/json")
-		err := json.NewEncoder(w).Encode(&user)
+	//routes for updating the information of items in the inventory
+	router.HandleFunc("/inventory/{ID}", updateItemById).Methods("PUT")
+	router.HandleFunc("/inventory/{ProductName}", updateItemByName).Methods("PUT")
 
-		if (err != nil) {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	}).Methods("POST")
+	//routes for deleting items in the inventory
+	router.HandleFunc("/inventory/{ID}", removeItemByID).Methods("DELETE")
+	router.HandleFunc("/inventory/{ProductName}", removeItemByName).Methods("DELETE")
 
-//this is the route for creating a new user into the database
-	router.HandleFunc("/inventory-home-page", func(w http.ResponseWriter, r *http.Request) {
-		//creating a new user variable
-		var inventory Inventory
-		
-		//creating the new user in the database
-		newInventory := DB.Create(&inventory)
-
-		if newInventory.Error != nil{
-			http.Error(w, newInventory.Error.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		//returning the created user to frontend
-		w.Header().Set("Content-Type", "application/json")
-		err := json.NewEncoder(w).Encode(&newInventory)
-
-		if (err != nil) {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	}).Methods("POST")
-
+	//Creates the server on port 8080
 	log.Fatal(http.ListenAndServe(":8080", router))
+}
+
+//Routing calls for the User table
+
+//creates the user based on the input information
+func makeUser(w http.ResponseWriter, r *http.Request) {
+	var user User
+	json.NewDecoder(r.Body).Decode(&user)
+	db.Create(&user)
+	fmt.Println(user)
+}
+
+//returns the specific user based on the ID
+func getUserWithID(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var user User
+	db.First(&user, vars["ID"])
+	fmt.Println(user)
+}
+
+//returns the specific user based on username
+func getUserWithUsername(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var user User
+	db.First(&user, vars["Username"])
+	fmt.Println(user)
+}
+
+//returns the specific user based on email
+func getUserWithEmail(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var user User
+	db.First(&user, vars["Email"])
+	fmt.Println(user)
+}
+
+//returns all of the users in the database
+func getAllUsers(w http.ResponseWriter, r *http.Request) {
+	var allUsers []User
+	db.Find(&allUsers)
+	fmt.Println(allUsers)
+}
+
+//function to remove the information of the user by ID
+func removeUserByID(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var user User
+	db.Delete(&user, vars["ID"])
+	fmt.Println(user)
+}
+
+//function to remove the information of the user by Email
+func removeUserByEmail(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var user User
+	db.Delete(&user, vars["Email"])
+	fmt.Println(user)
+}
+
+//function to remove the information of the user by Username
+func removeUserByUsername(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var user User
+	db.Delete(&user, vars["ID"])
+	fmt.Println(user)
+}
+
+//function to update the information of the user by ID
+func updateUserById(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var user User
+	
+	//find the user in the database
+	db.First(&user, vars["ID"])
+	
+	//updates the user in the database
+	json.NewDecoder(r.Body).Decode(&user)
+	db.Save(&user)
+
+	fmt.Println(user)
+}
+
+//function to update the information of the user by 
+func updateUserByUsername(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var user User
+	
+	//find the user in the database
+	db.First(&user, vars["Username"])
+	
+	//updates the user in the database
+	json.NewDecoder(r.Body).Decode(&user)
+	db.Save(&user)
+
+	fmt.Println(user)
+}
+
+//the routing for the inventory table
+
+//function creates a new item in the Inventory table
+func makeItem(w http.ResponseWriter, r *http.Request) {
+	var item Inventory
+	json.NewDecoder(r.Body).Decode(&item)
+	db.Create(&item)
+	fmt.Println(item)
+}
+
+//fuction retrieves the information of an item based on its ID
+func getItemWithID(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var item Inventory
+	db.First(&item, vars["ID"])
+	fmt.Println(item)
+}
+
+//function retrieves the information of an item based on its name
+func getItemWithName(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var item Inventory
+	db.First(&item, vars["ProductName"])
+	fmt.Println(item)
+}
+
+//function retrieves multiple item information based on its date (since it isn't unique)
+func getItemsWithDate(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var items []Inventory
+	db.First(&items, vars["DateAcquired"])
+	fmt.Println(items)
+}
+
+//function retrieves the first item information based on its date
+func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var item Inventory
+	db.First(&item, vars["DateAcquired"])
+	fmt.Println(item)
+}
+
+//function gets the information of all items in the Inventory table
+func getAllItems(w http.ResponseWriter, r *http.Request) {
+	var items []Inventory
+	db.First(&items)
+	fmt.Println(items)
+}
+
+//function removes the tuple that contains the input ID
+func removeItemByID(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var item Inventory
+	db.Delete(&item, vars["ID"])
+	fmt.Println(item)
+}
+
+//function removes the tuple by the product name
+func removeItemByName(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var item Inventory
+	db.Delete(&item, vars["ProductName"])
+	fmt.Println(item)
+}
+
+//function updates the item based on the ID
+func updateItemById(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var item Inventory
+	db.First(&item, vars["ID"])
+	json.NewDecoder(r.Body).Decode(&item)
+	db.Save(&item)
+	fmt.Println(item)
+}
+
+//function updates the item based on the item Name
+func updateItemByName(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var item Inventory
+	db.First(&item, vars["ProductName"])
+	json.NewDecoder(r.Body).Decode(&item)
+	db.Save(&item)
+	fmt.Println(item)
 }
