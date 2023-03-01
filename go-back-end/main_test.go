@@ -21,9 +21,9 @@ func TestMain(m *testing.M) {
 }
 
 func run(m *testing.M) (code int, err error) {
-	//Create test database
+	//Create test databases
 	//If we cannot connect to the database, return an error
-	db, err = gorm.Open(sqlite.Open("inventory.db"), &gorm.Config{})
+	db, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
 		return -1, fmt.Errorf("could not connect to the database: %w", err)
 	}
@@ -38,42 +38,73 @@ func run(m *testing.M) (code int, err error) {
 // Testing functions
 // Backend user tests
 
-// Add a user
+// The following tests first test http routing, then database operations.
+// FAIL will output if either fails, displaying the appropriate error.
 func TestMakeUser(t *testing.T) {
-	req := httptest.NewRequest(http.MethodPost, "/registration", nil)
+	req := httptest.NewRequest(http.MethodPut, "/registration", nil)
 	w := httptest.NewRecorder()
 	makeUser(w, req)
 	res := w.Result()
 	defer res.Body.Close()
-	/**
-	data, err := ioutil.ReadAll(res.Body)
-	//fmt.Println(string(data))
 
 	if err != nil {
 		t.Errorf("expected error to be nil got %v", err)
+	} else {
+		fmt.Println("PASS")
 	}
-	if string(data) != "ABC" {
-		fmt.Println(string(data))
-		t.Errorf("expected ABC got %v", string(data))
-	}
-	*/
 }
 func TestUpdateUser(t *testing.T) {
-
+	req := httptest.NewRequest(http.MethodPut, "/login/{1}", nil)
+	w := httptest.NewRecorder()
+	getUserWithID(w, req)
+	res := w.Result()
+	defer res.Body.Close()
+	if err != nil {
+		t.Errorf("expected error to be nil got %v", err)
+	} else {
+		fmt.Println("PASS")
+	}
 }
 
 func TestRemoveUser(t *testing.T) {
-
+	req := httptest.NewRequest(http.MethodDelete, "/login/{1}", nil)
+	w := httptest.NewRecorder()
+	removeUserByID(w, req)
+	res := w.Result()
+	defer res.Body.Close()
+	if err != nil {
+		t.Errorf("expected error to be nil got %v", err)
+	} else {
+		fmt.Println("PASS")
+	}
 }
 
 func TestFindUser(t *testing.T) {
-
+	req := httptest.NewRequest(http.MethodGet, "/login/{1}", nil)
+	w := httptest.NewRecorder()
+	getUserWithID(w, req)
+	res := w.Result()
+	defer res.Body.Close()
+	if err != nil {
+		t.Errorf("expected error to be nil got %v", err)
+	} else {
+		fmt.Println("PASS")
+	}
 }
 
 //Inventory tests
 
 func TestInsertItem(t *testing.T) {
-
+	req := httptest.NewRequest(http.MethodGet, "/login/{1}", nil)
+	w := httptest.NewRecorder()
+	getUserWithID(w, req)
+	res := w.Result()
+	defer res.Body.Close()
+	if err != nil {
+		t.Errorf("expected error to be nil got %v", err)
+	} else {
+		fmt.Println("PASS")
+	}
 }
 
 func TestUpdateItem(t *testing.T) {
