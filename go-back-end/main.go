@@ -96,7 +96,7 @@ func makeUser(w http.ResponseWriter, r *http.Request) {
 	var user User
 	json.NewDecoder(r.Body).Decode(&user)
 	db.Create(&user)
-	fmt.Println(user)
+	fmt.Printf("Created User %v\n", user)
 }
 
 // returns the specific user based on the ID
@@ -104,7 +104,7 @@ func getUserWithID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
 	db.First(&user, vars["ID"])
-	fmt.Println(user)
+	fmt.Printf("Got User: %v\n", user)
 }
 
 // returns the specific user based on username
@@ -135,7 +135,7 @@ func removeUserByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
 	db.Delete(&user, vars["ID"])
-	fmt.Println(user)
+	fmt.Printf("Removed User: %v\n", user)
 }
 
 // function to remove the information of the user by Email
@@ -166,7 +166,7 @@ func updateUserById(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&user)
 	db.Save(&user)
 
-	fmt.Println(user)
+	fmt.Printf("Updated User: %v\n", user)
 }
 
 // function to update the information of the user by
@@ -191,7 +191,7 @@ func makeItem(w http.ResponseWriter, r *http.Request) {
 	var item Inventory
 	json.NewDecoder(r.Body).Decode(&item)
 	db.Create(&item)
-	fmt.Println(item)
+	fmt.Printf("Created Item: %v\n", item)
 }
 
 // fuction retrieves the information of an item based on its ID
@@ -199,7 +199,7 @@ func getItemWithID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
 	db.First(&item, vars["ID"])
-	fmt.Println(item)
+	fmt.Printf("Got Item: %v\n", item)
 }
 
 // function retrieves the information of an item based on its name
@@ -238,7 +238,7 @@ func removeItemByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
 	db.Delete(&item, vars["ID"])
-	fmt.Println(item)
+	fmt.Printf("Removed Item: %v\n", item)
 }
 
 // function removes the tuple by the product name
@@ -256,7 +256,7 @@ func updateItemById(w http.ResponseWriter, r *http.Request) {
 	db.First(&item, vars["ID"])
 	json.NewDecoder(r.Body).Decode(&item)
 	db.Save(&item)
-	fmt.Println(item)
+	fmt.Printf("Updated Item: %v\n", item)
 }
 
 // function updates the item based on the item Name
