@@ -46,3 +46,17 @@ Unit tests for backend:
 
 TestMakeUser -- Tests creating a user. First tests function call from http request on an empty user with ID = 1, then, manually tests database entry for a fully populated sample user. If an error is thrown at any point during execution, the test fails. If the the final user in the database does not exactly equal the desired test user, the test fails, else, the test passes. 
 
+TestUpdateUser -- Tests updating a user. Firsts tests function call from http request on a user with no requested changes. If an error is thrown at any point during execution, the test fails. Does not test actual update / alteration of data since that process is tied into the client side requests in our code, will be more efficient to test later.
+
+TestRemoveUser -- 
+
+TestFindUser
+
+TestInsertItem
+
+TestUpdateItem
+
+TestRemoveItem
+
+TestFindItem
+
