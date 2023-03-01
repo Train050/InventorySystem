@@ -6,30 +6,8 @@ In sprint 2, our group was able to improve the functionality of both the fronten
 >>>>>>> d0f1ce639ff18c9299df83294476478ca61d16db
 
 Unit tests and Cypress tests for frontend:
-    1. Inventory cypress:  
-    describe('expect to show inventory page', () => {
-  it('passes', () => {
-    cy.visit('http://localhost:4200/inventory-home-page')
-    cy.get('.mat-mdc-paginator-navigation-next').click()
-  })
-})
-
-    2. Login Cypress:
-    
-    describe('Button position test', () => {
-    it('Button should change position when another button is clicked', () => {
-      cy.visit('http://localhost:53597/login-page');
-      cy.get('.login__submit').eq(1).then(($button) => {
-        const initialPosition = $button.position();
-        cy.get('.login__submit').eq(1).click();
-        cy.wait(1000); // wait for 1 second for the position change to happen
-        cy.get('.login__submit').eq(1).then(($button) => {
-          const newPosition = $button.position();
-          expect(newPosition).to.not.equal(initialPosition);
-        });
-      });
-    });
-  });
+   The inventory page Cypress test expects to show the inventory page and that it is directed to 'http://localhost:4200/inventory-home-page' and for the paginator to be working. 
+   The inventory page unit test tests the creation of the components in the inventory page. 
     
     3. Inventory unit tests:  
      it('should create', () => {
