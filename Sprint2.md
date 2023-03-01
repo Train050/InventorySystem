@@ -10,3 +10,5 @@ Unit tests and Cypress tests for frontend:
 
 Unit tests for backend: 
 
+TestMakeUser -- Tests creating a user. First tests function call from http request on an empty user with ID = 1, then, manually tests database entry for a fully populated sample user. If an error is thrown at any point during execution, the test fails. If the the final user in the database does not exactly equal the desired test user, the test fails, else, the test passes. 
+

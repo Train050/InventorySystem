@@ -7,6 +7,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -29,8 +30,6 @@ func run(m *testing.M) (code int, err error) {
 	}
 	db.AutoMigrate(&User{}, &Inventory{})
 
-	//db.Create(&User{ID: 1, Username: "Nicholas", Password: "password", Email: "test@example.com", PhoneNumber: "917-613-XXXX"})
-
 	//Run tests
 	return m.Run(), nil
 }
@@ -41,6 +40,7 @@ func run(m *testing.M) (code int, err error) {
 // The following tests first test http routing, then database operations.
 // FAIL will output if either fails, displaying the appropriate error.
 func TestMakeUser(t *testing.T) {
+	//Test empty user
 	req := httptest.NewRequest(http.MethodPut, "/registration", nil)
 	w := httptest.NewRecorder()
 	makeUser(w, req)
@@ -49,7 +49,15 @@ func TestMakeUser(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("expected error to be nil got %v", err)
-	} else {
+	}
+
+	//Test complete user
+	db.Create(&User{ID: 2, Username: "Nicholas", Password: "password", Email: "test@example.com", PhoneNumber: "917-613-XXXX"})
+	vars := mux.Vars(req)
+	var user User
+	db.First(&user, vars["ID"])
+
+	if user.ID == 2 && user.Username == "Nicholas" && user.Password == "password" && user.Email == "test@example.com" && user.PhoneNumber == "917-613-XXXX" {
 		fmt.Println("PASS")
 	}
 }
