@@ -44,19 +44,19 @@ Unit tests and Cypress tests for frontend:
 
 Unit tests for backend: 
 
-TestMakeUser -- Tests creating a user. First tests function call from http request on an empty user with ID = 1, then, manually tests database entry for a fully populated sample user. If an error is thrown at any point during execution, the test fails. If the the final user in the database does not exactly equal the desired test user, the test fails, else, the test passes. 
+TestMakeUser -- Tests creating a user. First tests function call from http request on an empty user with ID = 1, then, manually tests database entry for a fully populated sample user. If an error is thrown at any point during execution, the test fails. If the the final user in the database does not exactly equal the desired test user, the test fails, else, the test passes. This method is not mirrored in future tests, since it will be better to test actuall queries from the client in the next sprint.
 
 TestUpdateUser -- Tests updating a user. Firsts tests function call from http request on a user with no requested changes. If an error is thrown at any point during execution, the test fails. Does not test actual update / alteration of data since that process is tied into the client side requests in our code, will be more efficient to test later.
 
-TestRemoveUser -- 
+TestRemoveUser -- Tests removing a user. Tests function call from http request. If an error is thrown at any point during execution, the test fails.
 
-TestFindUser
+TestFindUser -- Tests find user function. Tests function call from http request on user from ID. If an error is thrown at any point during execution, the test fails.
 
-TestInsertItem
+TestInsertItem -- Tests creating an item. Tests function call from http request to create an item. If an error is thrown at any point during execution, the test fails.
 
-TestUpdateItem
+TestUpdateItem -- Tests updating an item from http request. Tests function call from http request on an item with no requested changes. If an error is thrown at any point during execution, the test fails.
 
-TestRemoveItem
+TestRemoveItem -- Tests removing an item. Tests function call from http request on an empty item. If an error is thrown at any point during execution, the test fails.
 
-TestFindItem
+TestFindItem -- Tests finding an item (empty item). Tests function call from http request on a user with no requested changes. If an error is thrown at any point during execution, the test fails.
 

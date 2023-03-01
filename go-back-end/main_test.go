@@ -61,6 +61,7 @@ func TestMakeUser(t *testing.T) {
 		fmt.Println("PASS")
 	}
 }
+
 func TestUpdateUser(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPut, "/login/{1}", nil)
 	w := httptest.NewRecorder()
