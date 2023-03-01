@@ -23,3 +23,47 @@ TestRemoveItem -- Tests removing an item. Tests function call from http request 
 
 TestFindItem -- Tests finding an item (empty item). Tests function call from http request on a user with no requested changes. If an error is thrown at any point during execution, the test fails.
 
+API Documentation
+User API
+
+makeUser -- creates the user based on the passed in JSON containing user information
+
+getUserWithID -- searches for a user based on the input ID in the database through GORM
+
+getUserWithUsername -- searches for a user based on the input Username in the database through GORM
+
+getUserWithEmail -- searches for a user based on the input Email in the database through GORM
+
+getAllUsers -- returns all of the tuples of all of the users in the database
+
+removeByUserID -- removes a user from the database by searching for the user by ID
+
+removeByUserEmail -- removes a user from the database by searching for the user by Email
+
+removeByUserUsername -- removes a user from the database by searching for the user by Username
+
+updateUserByID -- updates the information of the user by ID
+
+updateUserByUsername -- updates the user information based on the Username and JSON information
+
+Routing API
+
+makeItem -- the function creates a new item tuple in the database through GORM
+
+getItemWithID -- the function searches for the item in the inventory table based on ID and returns it if found
+
+getItemWithName -- the function searches for the item in the inventory table based on the name and returns it if found
+
+getItemWithDate -- the function searches for one or multiple items in inventory table based on acquired date and returns all that are found
+
+getFirstItemWithDate -- the function searches for the first item that has the input date in the inventory table and returns it
+
+getAllItems -- the function returns all of the tuples in the inventory table
+
+removeItemByID -- the function removes the item based on the passed in unique ID in the inventory table
+
+removeItemByName -- the function removes the item based on the passed in Name in the inventory table
+
+updateItemByID -- the function updates the item based on the ID passed through JSON
+
+updateItemByName -- the function updates the item based on Name passed through JSON
