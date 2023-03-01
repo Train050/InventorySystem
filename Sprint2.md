@@ -4,18 +4,7 @@ In sprint 2, our group was able to improve in both the frontend and backend. Reg
 Unit tests and Cypress tests for frontend:
    The inventory page Cypress test expects to show the inventory page and that it is directed to 'http://localhost:4200/inventory-home-page' and for the paginator to be working. 
    The inventory page unit test tests the creation of the components in the inventory page. 
-    
-    3. Inventory unit tests:  
-     it('should create', () => {
-    expect(component).toBeTruthy();
-    expect(component.dataSource).toBeTruthy();
-    expect(component.paginator).toBeInstanceOf(MatPaginator);
-    expect(component.applyFilter).toBeTruthy();
-    expect(component).toBeDefined();
-    expect(component.openAddItem).toBeTruthy();
-    expect(component.openAddItem).toBeInstanceOf(InventoryHomePageComponent);
-  });
-
+   
 Unit tests for backend: 
 
 TestMakeUser -- Tests creating a user. First tests function call from http request on an empty user with ID = 1, then, manually tests database entry for a fully populated sample user. If an error is thrown at any point during execution, the test fails. If the the final user in the database does not exactly equal the desired test user, the test fails, else, the test passes. This method is not mirrored in future tests, since it will be better to test actuall queries from the client in the next sprint.
