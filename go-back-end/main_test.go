@@ -95,9 +95,9 @@ func TestFindUser(t *testing.T) {
 //Inventory tests
 
 func TestInsertItem(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "/login/{1}", nil)
+	req := httptest.NewRequest(http.MethodPost, "/inventory", nil)
 	w := httptest.NewRecorder()
-	getUserWithID(w, req)
+	makeItem(w, req)
 	res := w.Result()
 	defer res.Body.Close()
 	if err != nil {
@@ -108,13 +108,40 @@ func TestInsertItem(t *testing.T) {
 }
 
 func TestUpdateItem(t *testing.T) {
-
+	req := httptest.NewRequest(http.MethodPost, "/inventory/{1}", nil)
+	w := httptest.NewRecorder()
+	updateItemById(w, req)
+	res := w.Result()
+	defer res.Body.Close()
+	if err != nil {
+		t.Errorf("expected error to be nil got %v", err)
+	} else {
+		fmt.Println("PASS")
+	}
 }
 
 func TestRemoveItem(t *testing.T) {
-
+	req := httptest.NewRequest(http.MethodDelete, "/inventory/{1}", nil)
+	w := httptest.NewRecorder()
+	updateItemById(w, req)
+	res := w.Result()
+	defer res.Body.Close()
+	if err != nil {
+		t.Errorf("expected error to be nil got %v", err)
+	} else {
+		fmt.Println("PASS")
+	}
 }
 
 func TestFindItem(t *testing.T) {
-
+	req := httptest.NewRequest(http.MethodGet, "/inventory/{1}", nil)
+	w := httptest.NewRecorder()
+	getItemWithID(w, req)
+	res := w.Result()
+	defer res.Body.Close()
+	if err != nil {
+		t.Errorf("expected error to be nil got %v", err)
+	} else {
+		fmt.Println("PASS")
+	}
 }
