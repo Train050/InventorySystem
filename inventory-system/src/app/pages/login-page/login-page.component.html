@@ -1,3 +1,4 @@
+<!--
 <div *ngIf="!isLogin">
     <h3>Register Account</h3>
     <input [(ngModel)]="registerFirstName" type="text" placeholder="First Name" />
@@ -15,4 +16,80 @@
     <button (click)="login()" [disabled]="!loginEmail || !loginPassword" >Login</button>
     <button (click)="isLogin=false">Register an Account?</button>
 </div>
+-->
 
+
+<div class="container" *ngIf="isLogin">
+	<div class="screen">
+		<div class="screen__content">
+			<form class="login">
+				<div class="login__field">
+					<i class="login__icon fas fa-user"></i>
+					<input [(ngModel)]="loginEmail" type="email" class="login__input" placeholder="Email" />
+				</div>
+				<div class="login__field">
+					<i class="login__icon fas fa-lock"></i>
+					<input [(ngModel)]="loginPassword" type="password" class="login__input" placeholder="Password" />
+				</div>
+				<button class="button login__submit" (click)="login()" [disabled]="!loginEmail || !loginPassword">
+					<span class="button__text">Log In Now</span>
+					<i class="button__icon fas fa-chevron-right"></i>
+				</button>
+                <button class="button login__submit" (click)="isLogin=false">
+					<span class="button__text"> Need to register?</span>
+					<i class="button__icon fas fa-chevron-right"></i>
+				</button>				
+			</form>
+			
+		</div>
+		<div class="screen__background">
+			<span class="screen__background__shape screen__background__shape4"></span>
+			<span class="screen__background__shape screen__background__shape3"></span>		
+			<span class="screen__background__shape screen__background__shape2"></span>
+			<span class="screen__background__shape screen__background__shape1"></span>
+		</div>		
+	</div>
+</div>
+
+
+
+
+<div class="container" *ngIf="!isLogin">
+	<div class="screen">
+		<div class="screen__content">
+			<form class="register" action="./inventory-home-page" method="post">
+				<div class="login__field">
+					<i class="login__icon fas fa-user"></i>
+					<input [(ngModel)]="registerFirstName" type="text" class="login__input" placeholder="First Name" />
+				</div>
+				<div class="login__field">
+					<i class="login__icon fas fa-lock"></i>
+					<input [(ngModel)]="registerLastName" type="text" class="login__input" placeholder="Last Name" />
+				</div>
+				<div class="login__field">
+					<i class="login__icon fas fa-lock"></i>
+					<input [(ngModel)]="registerPassword" type="password" class="login__input" placeholder="Password" />
+				</div>
+                <div class="login__field">
+					<i class="login__icon fas fa-lock"></i>
+					<input [(ngModel)]="registerEmail" type="email" class="login__input" placeholder="Email" />
+				</div>
+				<button (click)="register()" class="button login__submit">
+					<span class="button__text">Register Now</span>
+					<i class="button__icon fas fa-chevron-right"></i>
+				</button>
+				<button (click)="isLogin=true" class="button login__submit">
+					<span class="button__text">Have an account?</span>
+					<i class="button__icon fas fa-chevron-right"></i>
+				</button>		
+			</form>
+
+		</div>
+		<div class="screen__background">
+			<span class="screen__background__shape screen__background__shape4"></span>
+			<span class="screen__background__shape screen__background__shape3"></span>		
+			<span class="screen__background__shape screen__background__shape2"></span>
+			<span class="screen__background__shape screen__background__shape1"></span>
+		</div>		
+	</div>
+</div>

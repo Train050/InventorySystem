@@ -16,15 +16,15 @@ import (
 )
 
 type User struct {
-	ID 			uint //'gorm:"primaryKey"'
-	Username    string //'gorm:"unique"'
+	ID          uint   `gorm:"primaryKey"`
+	Username    string `gorm:"unique"`
 	Password    string
-	Email       string	//'gorm:"unique"'
-	PhoneNumber string	//'gorm:"unique"'
+	Email       string `gorm:"unique"`
+	PhoneNumber string `gorm:"unique"`
 }
 
 type Inventory struct {
-	ID            uint //'gorm:"primaryKey"'
+	ID            uint   //'gorm:"primaryKey"'
 	ProductName   string //'gorm:"unique"'
 	DateAcquired  string
 	ProductAmount uint
@@ -41,7 +41,7 @@ func main() {
 
 	//in the event that the database can't be opened
 	if err != nil {
-		log.Fatal("Failed to connect to the database.",)
+		log.Fatal("Failed to connect to the database.")
 	}
 
 	//create the tables in inventory if they don't already exist
@@ -62,7 +62,7 @@ func main() {
 	router.HandleFunc("/login/{ID}", removeUserByID).Methods("DELETE")
 	router.HandleFunc("/login/{Username}", removeUserByUsername).Methods("DELETE")
 	router.HandleFunc("/login/{Email}", removeUserByEmail).Methods("DELETE")
-	
+
 	//Creating route definitions for registration page (just creating a new user)
 	router.HandleFunc("/registration", makeUser).Methods("POST")
 
@@ -91,7 +91,7 @@ func main() {
 
 //Routing calls for the User table
 
-//creates the user based on the input information
+// creates the user based on the input information
 func makeUser(w http.ResponseWriter, r *http.Request) {
 	var user User
 	json.NewDecoder(r.Body).Decode(&user)
@@ -99,7 +99,7 @@ func makeUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 }
 
-//returns the specific user based on the ID
+// returns the specific user based on the ID
 func getUserWithID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
@@ -107,7 +107,7 @@ func getUserWithID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 }
 
-//returns the specific user based on username
+// returns the specific user based on username
 func getUserWithUsername(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
@@ -115,7 +115,7 @@ func getUserWithUsername(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 }
 
-//returns the specific user based on email
+// returns the specific user based on email
 func getUserWithEmail(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
@@ -123,14 +123,14 @@ func getUserWithEmail(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 }
 
-//returns all of the users in the database
+// returns all of the users in the database
 func getAllUsers(w http.ResponseWriter, r *http.Request) {
 	var allUsers []User
 	db.Find(&allUsers)
 	fmt.Println(allUsers)
 }
 
-//function to remove the information of the user by ID
+// function to remove the information of the user by ID
 func removeUserByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
@@ -138,7 +138,7 @@ func removeUserByID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 }
 
-//function to remove the information of the user by Email
+// function to remove the information of the user by Email
 func removeUserByEmail(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
@@ -146,7 +146,7 @@ func removeUserByEmail(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 }
 
-//function to remove the information of the user by Username
+// function to remove the information of the user by Username
 func removeUserByUsername(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
@@ -154,14 +154,14 @@ func removeUserByUsername(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 }
 
-//function to update the information of the user by ID
+// function to update the information of the user by ID
 func updateUserById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
-	
+
 	//find the user in the database
 	db.First(&user, vars["ID"])
-	
+
 	//updates the user in the database
 	json.NewDecoder(r.Body).Decode(&user)
 	db.Save(&user)
@@ -169,14 +169,14 @@ func updateUserById(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 }
 
-//function to update the information of the user by 
+// function to update the information of the user by
 func updateUserByUsername(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
-	
+
 	//find the user in the database
 	db.First(&user, vars["Username"])
-	
+
 	//updates the user in the database
 	json.NewDecoder(r.Body).Decode(&user)
 	db.Save(&user)
@@ -186,7 +186,7 @@ func updateUserByUsername(w http.ResponseWriter, r *http.Request) {
 
 //the routing for the inventory table
 
-//function creates a new item in the Inventory table
+// function creates a new item in the Inventory table
 func makeItem(w http.ResponseWriter, r *http.Request) {
 	var item Inventory
 	json.NewDecoder(r.Body).Decode(&item)
@@ -194,7 +194,7 @@ func makeItem(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(item)
 }
 
-//fuction retrieves the information of an item based on its ID
+// fuction retrieves the information of an item based on its ID
 func getItemWithID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
@@ -202,7 +202,7 @@ func getItemWithID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(item)
 }
 
-//function retrieves the information of an item based on its name
+// function retrieves the information of an item based on its name
 func getItemWithName(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
@@ -210,7 +210,7 @@ func getItemWithName(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(item)
 }
 
-//function retrieves multiple item information based on its date (since it isn't unique)
+// function retrieves multiple item information based on its date (since it isn't unique)
 func getItemsWithDate(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var items []Inventory
@@ -218,7 +218,7 @@ func getItemsWithDate(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(items)
 }
 
-//function retrieves the first item information based on its date
+// function retrieves the first item information based on its date
 func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
@@ -226,14 +226,14 @@ func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(item)
 }
 
-//function gets the information of all items in the Inventory table
+// function gets the information of all items in the Inventory table
 func getAllItems(w http.ResponseWriter, r *http.Request) {
 	var items []Inventory
 	db.First(&items)
 	fmt.Println(items)
 }
 
-//function removes the tuple that contains the input ID
+// function removes the tuple that contains the input ID
 func removeItemByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
@@ -241,7 +241,7 @@ func removeItemByID(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(item)
 }
 
-//function removes the tuple by the product name
+// function removes the tuple by the product name
 func removeItemByName(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
@@ -249,7 +249,7 @@ func removeItemByName(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(item)
 }
 
-//function updates the item based on the ID
+// function updates the item based on the ID
 func updateItemById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
@@ -259,7 +259,7 @@ func updateItemById(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(item)
 }
 
-//function updates the item based on the item Name
+// function updates the item based on the item Name
 func updateItemByName(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
