@@ -1,10 +1,9 @@
-import { AfterViewInit, Component, ViewChild, Inject, OnInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-import {MatDialog, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { FormControl, FormGroup } from '@angular/forms';
-//import {AddItemComponent} from './inventory-home-page.component';
+import {MatDialog} from '@angular/material/dialog';
+import { AddItemComponent } from 'app/pages/inventory-home-page/add-item';
 
 export interface UserData {
   id: string;
@@ -81,11 +80,7 @@ export class InventoryHomePageComponent {
   }
 
   openAddItem() {
-    this.dialog.open(AddItemComponent, {
-      data: {
-        animal: 'panda',
-      },
-    });
+    const dialogRef = this.dialog.open(AddItemComponent)
   }
 
 }
@@ -104,27 +99,4 @@ function createNewUser(id: number): UserData {
     progress: Math.round(Math.random() * 100).toString(),
     fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
   };
-}
-
-@Component({
-  selector: 'app-add-item',
-  templateUrl: 'Add-item.html',
-  styleUrls: ['add-item.css'],
-})
-export class AddItemComponent implements OnInit{
-  form: FormGroup = new FormGroup({
-    iD: new FormControl(''),
-    productName: new FormControl(''),
-    dateAcquired: new FormControl(''),
-    quantity: new FormControl(''),
-  })
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {}) {
-
-  }
-  ngOnInit(): void {
-
-  }
-  submitItem() {
-    console.log(this.form.value);
-  }
 }
