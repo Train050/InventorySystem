@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 
@@ -228,9 +229,12 @@ func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
 
 // function gets the information of all items in the Inventory table
 func getAllItems(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	var items []Inventory
 	db.First(&items)
 	fmt.Println(items)
+	json.NewDecoder(r.Body).Decode("test")
+
 }
 
 // function removes the tuple that contains the input ID
