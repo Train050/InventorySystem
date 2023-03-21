@@ -3,7 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io"
+
+	//	"io"
 	"log"
 	"net/http"
 
@@ -231,9 +232,9 @@ func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
 func getAllItems(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var items []Inventory
-	db.First(&items)
-	fmt.Println(items)
-	json.NewDecoder(r.Body).Decode("test")
+	db.Find(&items)
+	// fmt.Printf("test")
+	json.NewEncoder(w).Encode(items)
 
 }
 
