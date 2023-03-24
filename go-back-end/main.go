@@ -26,8 +26,8 @@ type User struct {
 }
 
 type Inventory struct {
-	ID            uint   //'gorm:"primaryKey"'
-	ProductName   string //'gorm:"unique"'
+	ID            uint   `gorm:"primaryKey"`
+	ProductName   string `'gorm:"unique"`
 	DateAcquired  string
 	ProductAmount uint
 }
@@ -48,6 +48,17 @@ func main() {
 
 	//create the tables in inventory if they don't already exist
 	db.AutoMigrate(&User{}, &Inventory{})
+
+	/*
+
+		In order to use the routing, be it a GET, PUT, POST, or DELETE action,
+		you must go through the router designated after the slash (/). In the front end,
+		you will use the url to identify the router you are looking to send the information,
+		say /login, and then include the attribute, sent through JSON, that you are
+		looking to input/create/edit, like {ID}. For creating users, the router is sent
+		the entire JSON entity containing all information so no specific attribute is specified.
+
+	*/
 
 	//Creating route definitions for login page
 	//routes for getting the information of the user
