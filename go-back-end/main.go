@@ -27,7 +27,7 @@ type User struct {
 
 type Inventory struct {
 	ID            uint   `gorm:"primaryKey"`
-	ProductName   string `'gorm:"unique"`
+	ProductName   string `gorm:"unique"`
 	DateAcquired  string
 	ProductAmount uint
 }
