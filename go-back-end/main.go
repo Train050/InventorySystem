@@ -11,10 +11,13 @@ import (
 	//for use with json files
 	//initializers "inventory-system/initializers"
 
+	//routing and database libraries
 	//"github.com/mattn/go-sqlite3"
+	"github.com/bxcodec/faker/v4"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	//
 )
 
 type User struct {
@@ -35,6 +38,41 @@ type Inventory struct {
 var db *gorm.DB
 var err error
 
+// function to seed the database with users
+func userSeeder(database *gorm.DB) error {
+	//creates 1000 users with random information
+	for i := 0; i < 1000; i++ {
+		user := User{
+			Username: faker.Username(), Password: faker.Password(), Email: faker.Email(), PhoneNumber: faker.Phonenumber(),
+		}
+		//creates the user in the database
+		err := db.Create(&user).Error
+
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// function to seed the database with items
+func inventorySeeder(database *gorm.DB) error {
+	//creates 1000 items with random information
+	for i := 0; i < 1000; i++ {
+		item := Inventory{
+			ProductName: faker.Word(), DateAcquired: faker.Date(), ProductAmount: uint(faker.RandomUnixTime()),
+		}
+
+		//creates the item in the database
+		err := db.Create(&item).Error
+		//if there is an error, return the error
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func main() {
 	router := mux.NewRouter()
 
@@ -49,8 +87,21 @@ func main() {
 	//create the tables in inventory if they don't already exist
 	db.AutoMigrate(&User{}, &Inventory{})
 
-	/*
+	//Seeding program to insert random data into the database for users and inventory
+	err := userSeeder(db)
 
+	if err != nil {
+		panic("User seeding failed.")
+	}
+
+	//Seeding the inventory table with 1000 tuples of random data
+	err = inventorySeeder(db)
+
+	if err != nil {
+		panic("Inventory seeding failed.")
+	}
+
+	/*
 		In order to use the routing, be it a GET, PUT, POST, or DELETE action,
 		you must go through the router designated after the slash (/). In the front end,
 		you will use the url to identify the router you are looking to send the information,
