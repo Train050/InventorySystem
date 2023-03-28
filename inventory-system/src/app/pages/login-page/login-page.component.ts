@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 })
 
 export class LoginPageComponent {
+  
   isLogin: boolean = false
   registerFirstName: string | null = null
   registerLastName: string | null = null
@@ -17,18 +18,26 @@ export class LoginPageComponent {
   registerPassword: string | null = null
   loginEmail: string | null = null
   loginPassword: string | null = null
+  url = 'http://httpbin.org/post';
+
   constructor(
     private httpClient: HttpClient,
     private router: Router
   ){
   }
   register(){
-    console.log(this.registerFirstName, this.registerPassword)
-    this.httpClient.post('http://localhost:8080/register', {
+    console.log("in register");
+    const postData = {
+      
       firstName: this.registerFirstName,
       lastName: this.registerLastName,
       email: this.registerEmail,
       password: this.registerPassword,
+    };
+    console.log(postData.firstName, postData.lastName, postData.email, postData.password);
+    this.httpClient.post(this.url, {
+      postData
+     
     }).subscribe((response: any) => {
       if(response){
         localStorage.setItem('token', response.jwt)
