@@ -190,7 +190,26 @@ func getUserWithEmail(w http.ResponseWriter, r *http.Request) {
 // returns all of the users in the database
 func getAllUsers(w http.ResponseWriter, r *http.Request) {
 	var allUsers []User
-	db.Find(&allUsers)
+	w.Header().Set("Content-Type", "application/json")
+
+	err := db.Find(&allUsers).Error
+
+	if err != nil {
+		w.Write([]byte("All Users Error"))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	outJson, err := json.Marshal(allUsers)
+
+	if err != nil {
+		w.Write([]byte("Error Marshalling"))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// fmt.Printf("test")
+	w.Write(outJson)
 	fmt.Println(allUsers)
 }
 
@@ -294,10 +313,25 @@ func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
 func getAllItems(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var items []Inventory
-	db.Find(&items)
-	// fmt.Printf("test")
-	json.NewEncoder(w).Encode(items)
 
+	err := db.Find(&items).Error
+
+	if err != nil {
+		w.Write([]byte("All Items Error"))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	outJson, err := json.Marshal(items)
+
+	if err != nil {
+		w.Write([]byte("Error Marshalling"))
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// fmt.Printf("test")
+	w.Write(outJson)
 }
 
 // function removes the tuple that contains the input ID
