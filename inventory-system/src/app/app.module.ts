@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
-import { InventoryHomePageComponent, AddItemComponent } from './pages/inventory-home-page/inventory-home-page.component';
+import { InventoryHomePageComponent } from './pages/inventory-home-page/inventory-home-page.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule} from '@angular/material/menu';
@@ -21,6 +21,8 @@ import { MatPaginatorModule} from '@angular/material/paginator';
 import { MatDialogModule} from '@angular/material/dialog';
 import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule} from '@angular/material/icon';
+import { NavComponent } from './pages/inventory-home-page/nav/nav.component';
+import { AddItemComponent } from './pages/inventory-home-page/add-item';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +31,8 @@ import { MatIconModule} from '@angular/material/icon';
     InventoryHomePageComponent,
     RegistrationPageComponent,
     ProfileComponent,
-    AddItemComponent
+    AddItemComponent,
+    NavComponent
   ],
   imports: [
     BrowserModule,

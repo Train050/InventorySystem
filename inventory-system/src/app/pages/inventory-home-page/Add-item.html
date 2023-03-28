@@ -1,22 +1,22 @@
 <form [formGroup]="form" class="example-form">
   <!-- <mat-form-field class="example-full-width">
-    <mat-label>ID</mat-label> -->
-    <input placeholder="Ex. Pizza" formControlName="iD">
-  <!-- </mat-form-field> -->
+    <mat-label>ID</mat-label>
+    <input matInput formControlName="id">
+  </mat-form-field> -->
 
   <mat-form-field class="example-full-width">
     <mat-label>Product Name</mat-label>
-    <input matInput placeholder="Ex. Pizza" formControlName="productName">
+    <input matInput formControlName="productName">
   </mat-form-field>
 
   <mat-form-field class="example-full-width">
     <mat-label>Date Acquired</mat-label>
-    <input matInput placeholder="Ex. Pizza" formControlName="dateAcquired">
+    <input matInput formControlName="dateAcquired">
   </mat-form-field>
 
   <mat-form-field class="example-full-width">
     <mat-label>Quantity</mat-label>
-    <input matInput placeholder="Ex. Pizza" formControlName="quantity">
+    <input matInput formControlName="quantity">
   </mat-form-field>
 </form>
-<button (click)="submitItem()">Submit</button>
+<button mat-stroked-button style="margin: 1rem;" (click)="submitItem()">Submit</button>
