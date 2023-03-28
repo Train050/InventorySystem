@@ -25,11 +25,11 @@
 			<form class="login">
 				<div class="login__field">
 					<i class="login__icon fas fa-user"></i>
-					<input [(ngModel)]="loginEmail" type="email" class="login__input" placeholder="Email" />
+					<input [(ngModel)]="loginEmail" name="lemail" type="email" class="login__input" placeholder="Email" />
 				</div>
 				<div class="login__field">
 					<i class="login__icon fas fa-lock"></i>
-					<input [(ngModel)]="loginPassword" type="password" class="login__input" placeholder="Password" />
+					<input [(ngModel)]="loginPassword" name="lpword" type="password" class="login__input" placeholder="Password" />
 				</div>
 				<button class="button login__submit" (click)="login()" [disabled]="!loginEmail || !loginPassword">
 					<span class="button__text">Log In Now</span>
@@ -60,19 +60,19 @@
 			<form class="register" action="./inventory-home-page" method="post">
 				<div class="login__field">
 					<i class="login__icon fas fa-user"></i>
-					<input [(ngModel)]="registerFirstName" type="text" class="login__input" placeholder="First Name" />
+					<input [(ngModel)]="registerFirstName" name="first" type="text" class="login__input" placeholder="First Name" />
 				</div>
 				<div class="login__field">
 					<i class="login__icon fas fa-lock"></i>
-					<input [(ngModel)]="registerLastName" type="text" class="login__input" placeholder="Last Name" />
+					<input [(ngModel)]="registerLastName" name="last" type="text" class="login__input" placeholder="Last Name" />
 				</div>
 				<div class="login__field">
 					<i class="login__icon fas fa-lock"></i>
-					<input [(ngModel)]="registerPassword" type="password" class="login__input" placeholder="Password" />
+					<input [(ngModel)]="registerPassword" name="pword" type="password" class="login__input" placeholder="Password" />
 				</div>
                 <div class="login__field">
 					<i class="login__icon fas fa-lock"></i>
-					<input [(ngModel)]="registerEmail" type="email" class="login__input" placeholder="Email" />
+					<input [(ngModel)]="registerEmail" name="email" type="email" class="login__input" placeholder="Email" />
 				</div>
 				<button (click)="register()" class="button login__submit">
 					<span class="button__text">Register Now</span>
