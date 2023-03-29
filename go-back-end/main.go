@@ -29,7 +29,7 @@ type User struct {
 	Password     string
 	Email        string `gorm:"unique; not null"`
 	PhoneNumber  string `gorm:"unique; not null"`
-	HashPassword string `gorm:"not null"`
+	//HashPassword string `gorm:"not null"`
 }
 
 type Inventory struct {
