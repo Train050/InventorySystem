@@ -1,12 +1,12 @@
-In sprint 2, our group was able to improve the functionality of both the frontend and backend. Regarding the frontend development, we were able to develop a filter function to find specific data entries. In addition, we were able to get the table size changing feature working so rows shown can be adjusted. For the backend, we redesigned our initial code to be more simplified. We managed to get the SQlite database working with our tables, inventory and users, allowing for the creation of tuples. We were able to get GORM to communicate to the database and allow for the insertion, deletion, finding of tuples, and updating of the tuples within the tables. We also started integration of communication between backend and frontend. We established the routes that will use JSON to send information between frontend and backend. We lastly updated our code to include documentation for the use of each functions and their appropriate routes. Both frontend and backend also created several test cases to determine if the applications are working as expected.
+In sprint 3, our group was able further expand and improve upon the functionality of our application. In the back end, we have increased the documentation of routing so that it is easier for the front end to use them. In addition, we have created a seeding program for users and inventory that generates data to populate the database. We introduced an authorization feature that encrypts the password of users and checks their authorization token before allowing them to get data from the database. Additional test cases were created for the previously described features. Regarding the front end, 
 
 The inventory page Cypress test expects to show the inventory page and that it is directed to 'http://localhost:4200/inventory-home-page' and for the paginator to be working. 
 The inventory page unit test tests the creation of the components in the inventory page. 
 
 Unit tests for backend: 
 
-TestMakeUser -- Tests creating a user. First tests function call from http request on an empty user with ID = 1, then, manually tests database entry for a fully populated sample user. If an error is thrown at any point during execution, the test fails. If the the final user in the database does not exactly equal the desired test user, the test fails, else, the test passes. This method is not mirrored in future tests, since it will be better to test actuall queries from the client in the next sprint.
-@@ -58,3 +27,47 @@ TestRemoveItem -- Tests removing an item. Tests function call from http request
+TestMakeUser -- Tests creating a user. First tests function call from http request on an empty user with ID = 1, then, manually tests database entry for a fully populated sample user. If an error is thrown at any point during execution, the test fails. If the the final user in the database does not exactly equal the desired test user, the test fails, else, the test passes. This method is not mirrored in future tests, since it will be better to test actual queries from the client in the next sprint.
+TestRemoveItem -- Tests removing an item. Tests function call from http request
 
 TestFindItem -- Tests finding an item (empty item). Tests function call from http request on a user with no requested changes. If an error is thrown at any point during execution, the test fails.
 
@@ -33,7 +33,7 @@ updateUserByID -- updates the information of the user by ID
 
 updateUserByUsername -- updates the user information based on the Username and JSON information
 
-Routing API
+Inventory API
 
 makeItem -- the function creates a new item tuple in the database through GORM
 
@@ -51,9 +51,11 @@ removeItemByID -- the function removes the item based on the passed in unique ID
 
 removeItemByName -- the function removes the item based on the passed in Name in the inventory table
 
-updateItemByID -- the function updates the item based on the ID passed through JSON
+updateItemByID -- the function updates the item based on the ID passed through JSON ojbect
 
-updateItemByName -- the function updates the item based on Name passed through JSON
+updateItemByName -- the function updates the item based on Name passed through JSON object
+
+Routing API
 
 Front End testing
 
