@@ -26,17 +26,17 @@ import (
 type User struct {
 	ID           uint   `gorm:"primaryKey"`
 	Username     string `gorm:"unique; not null"`
-	Password     string
-	Email        string `gorm:"unique; not null"`
-	PhoneNumber  string `gorm:"unique; not null"`
-	HashPassword string `gorm:"not null"`
+	Password     string `gorm:"not null"`
+	Email        string `gorm:"not null"`
+	PhoneNumber  string `gorm:"not null"`
+	HashPassword string
 }
 
 type Inventory struct {
-	ID            uint   //'gorm:"primaryKey"'
-	ProductName   string //'gorm:"unique"'
-	DateAcquired  string
-	ProductAmount uint
+	ID            uint   `gorm:"primaryKey"`
+	ProductName   string `gorm:"not null"`
+	DateAcquired  string `gorm:"not null"`
+	ProductAmount uint   `gorm:"not null"`
 }
 
 var db *gorm.DB
@@ -44,10 +44,10 @@ var err error
 
 // function to seed the database with users
 func userSeeder(database *gorm.DB) error {
-	//creates 1000 users with random information
-	for i := 0; i < 1000; i++ {
+	//creates 100 users with random information
+	for i := 0; i < 100; i++ {
 		user := User{
-			Username: faker.Username(), Password: faker.Password(), Email: faker.Email(), PhoneNumber: faker.Phonenumber(),
+			Username: faker.Username(), Password: faker.Password(), Email: faker.Email(), PhoneNumber: faker.Phonenumber(), HashPassword: faker.Password(),
 		}
 		//creates the user in the database
 		err := db.Create(&user).Error
@@ -61,8 +61,8 @@ func userSeeder(database *gorm.DB) error {
 
 // function to seed the database with items
 func inventorySeeder(database *gorm.DB) error {
-	//creates 1000 items with random information
-	for i := 0; i < 1000; i++ {
+	//creates 100 items with random information
+	for i := 0; i < 100; i++ {
 		item := Inventory{
 			ProductName: faker.Word(), DateAcquired: faker.Date(), ProductAmount: uint(faker.RandomUnixTime()),
 		}
@@ -129,7 +129,7 @@ func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//Creating JWT token for the user
+	//Creating JWT token for the user (lasts for 12 hours upon being granted)
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"username":   user.Username,
 		"password":   user.Password,
@@ -141,6 +141,7 @@ func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 	//signing the token with the secret key
 	tokenString, err := jwtToken.SignedString([]byte("VerySecretKey"))
 
+	//if there is an error signing the token, return an error
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Error signing the token"))
@@ -151,12 +152,14 @@ func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(map[string]string{"token": tokenString})
 
+	//if there is an error sending the token, return an error
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Error sending the token in json"))
 		return
 	}
 
+	//if the user is authenticated, then it returns a success message
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("User authenticated"))
 }
@@ -180,9 +183,13 @@ func main() {
 		log.Fatal("Failed to connect to the database.")
 	}
 
+	//seeds the database with users and items
+	userSeeder(db)
+	inventorySeeder(db)
+
 	//create the tables in inventory if they don't already exist
 	//TODO: the line below triggers a build error
-	//db.AutoMigrate(&User{}, &Inventory{})
+	db.AutoMigrate(&User{}, &Inventory{})
 
 	//Creating route definitions for login page
 	//routes for getting the information of the user
