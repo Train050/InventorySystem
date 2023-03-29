@@ -1,10 +1,13 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"strings"
+	"time"
 
-	//	"io"
+	//"io"
 	"log"
 	"net/http"
 
@@ -12,17 +15,21 @@ import (
 	//initializers "inventory-system/initializers"
 
 	//"github.com/mattn/go-sqlite3"
+	"github.com/bxcodec/faker/v4"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 type User struct {
-	ID          uint   `gorm:"primaryKey"`
-	Username    string `gorm:"unique"`
-	Password    string
-	Email       string `gorm:"unique"`
-	PhoneNumber string `gorm:"unique"`
+	ID           uint   `gorm:"primaryKey"`
+	Username     string `gorm:"unique; not null"`
+	Password     string
+	Email        string `gorm:"unique; not null"`
+	PhoneNumber  string `gorm:"unique; not null"`
+	HashPassword string `gorm:"not null"`
 }
 
 type Inventory struct {
@@ -35,8 +42,135 @@ type Inventory struct {
 var db *gorm.DB
 var err error
 
+// function to seed the database with users
+func userSeeder(database *gorm.DB) error {
+	//creates 1000 users with random information
+	for i := 0; i < 1000; i++ {
+		user := User{
+			Username: faker.Username(), Password: faker.Password(), Email: faker.Email(), PhoneNumber: faker.Phonenumber(),
+		}
+		//creates the user in the database
+		err := db.Create(&user).Error
+
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// function to seed the database with items
+func inventorySeeder(database *gorm.DB) error {
+	//creates 1000 items with random information
+	for i := 0; i < 1000; i++ {
+		item := Inventory{
+			ProductName: faker.Word(), DateAcquired: faker.Date(), ProductAmount: uint(faker.RandomUnixTime()),
+		}
+
+		//creates the item in the database
+		err := db.Create(&item).Error
+		//if there is an error, return the error
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Checks the authorization of users requesting information
+func userAuthenticator(w http.ResponseWriter, r *http.Request) {
+
+	//first checks for authorization within the json header
+	auth := r.Header.Get("Authorization")
+	if auth == "" {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("Unauthorized"))
+		return
+	}
+
+	//decodes the authorization
+	encodeAuth := strings.TrimPrefix(auth, "Basic ")
+	decodeAuth, err := base64.StdEncoding.DecodeString(encodeAuth)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Authorization failed"))
+		return
+	}
+
+	//splits the authorization into username and password
+	authArray := strings.Split(string(decodeAuth), ":")
+	if len(authArray) != 2 {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Authorization failed"))
+		return
+	}
+
+	//assigns the username and password to variables
+	username := authArray[0]
+	password := authArray[1]
+
+	//if the authorization is not empty, then it checks the database for the user
+	var user User
+	err = db.Where("Username = ?", username).First(&user).Error
+
+	//if the user is not found, then it returns an error
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("Username or Password not found"))
+		return
+	}
+
+	//if the user is found, then it checks the password hash
+	err = bcrypt.CompareHashAndPassword([]byte(user.HashPassword), []byte(password))
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("Username or Password not found"))
+		return
+	}
+
+	//Creating JWT token for the user
+	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"username":   user.Username,
+		"password":   user.Password,
+		"email":      user.Email,
+		"phone":      user.PhoneNumber,
+		"expiration": time.Now().Add(time.Hour * 12).Unix(),
+	})
+
+	//signing the token with the secret key
+	tokenString, err := jwtToken.SignedString([]byte("VerySecretKey"))
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error signing the token"))
+		return
+	}
+
+	//sending the token to the user
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(map[string]string{"token": tokenString})
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error sending the token in json"))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("User authenticated"))
+}
+
+//Still working on this function
+/*
+func checkToken(next http.HandlerFunc) http.HandlerFunc {
+
+}
+*/
+
 func main() {
 	router := mux.NewRouter()
+	//authRouter := router.PathPrefix("/api").Subrouter()
 
 	//opens the SQLite3 database inventory (or creates it if it doesn't exist)
 	db, err = gorm.Open(sqlite.Open("inventory.db"), &gorm.Config{})
@@ -73,6 +207,13 @@ func main() {
 	router.HandleFunc("/inventory", makeItem).Methods("POST")
 
 	//routes for getting the information of items in the inventory
+	/*
+		router.HandleFunc("/inventory/{ID}", checkToken(getItemWithID)).Methods("GET")
+		router.HandleFunc("/inventory/{ProductName}", checkToken(getItemWithName)).Methods("GET")
+		router.HandleFunc("/inventory/{DateAcquired}", checkToken(getFirstItemWithDate)).Methods("GET")
+		router.HandleFunc("/inventory/{DateAcquired}", checkToken(getItemsWithDate)).Methods("GET")
+		router.HandleFunc("/inventory", checkToken(getAllItems)).Methods("GET")
+	*/
 	router.HandleFunc("/inventory/{ID}", getItemWithID).Methods("GET")
 	router.HandleFunc("/inventory/{ProductName}", getItemWithName).Methods("GET")
 	router.HandleFunc("/inventory/{DateAcquired}", getFirstItemWithDate).Methods("GET")
@@ -230,12 +371,9 @@ func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
 
 // function gets the information of all items in the Inventory table
 func getAllItems(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
 	var items []Inventory
-	db.Find(&items)
-	// fmt.Printf("test")
-	json.NewEncoder(w).Encode(items)
-
+	db.First(&items)
+	fmt.Println(items)
 }
 
 // function removes the tuple that contains the input ID
