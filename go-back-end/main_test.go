@@ -7,6 +7,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/bxcodec/faker/v4"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -146,6 +147,95 @@ func TestFindItem(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/inventory/{1}", nil)
 	w := httptest.NewRecorder()
 	getItemWithID(w, req)
+	res := w.Result()
+	defer res.Body.Close()
+	if err != nil {
+		t.Errorf("expected error to be nil got %v", err)
+	} else {
+		fmt.Println("PASS")
+	}
+}
+
+//Sprint 3 backend tests
+
+// Seeding
+// User, DB mocked for simplicity, tests only username faking
+func TestUserSeeder(t *testing.T) {
+	fmt.Println("Testing User Seeder")
+	var mockedUsers [1001]string
+	for i := 0; i < 1000; i++ {
+		mockedUsers[i] = "s"
+	}
+	for i := 0; i < 1000; i++ {
+		var Username = faker.Username()
+		//creates the user in the database (array)
+		mockedUsers[i] = Username
+	}
+
+	var err = "err"
+	for i := 0; i < 1000; i++ {
+		if mockedUsers[i] == "s" {
+			err = "some users not populated"
+		}
+	}
+	if err != "err" {
+		t.Errorf("expected error to be nil got %v", err)
+		fmt.Println()
+	} else {
+		fmt.Println("PASS")
+		fmt.Println()
+	}
+}
+
+// Inventory, db mocked, product name tested
+func TestInventorySeeder(t *testing.T) {
+	fmt.Println("Testing Inventory Seeder")
+	var mockedInventory [1001]string
+	for i := 0; i < 1000; i++ {
+		mockedInventory[i] = "s"
+	}
+	for i := 0; i < 1000; i++ {
+		var ProductName = faker.Word()
+		//creates the user in the database (array)
+		mockedInventory[i] = ProductName
+	}
+
+	var err = "err"
+	for i := 0; i < 1000; i++ {
+		if mockedInventory[i] == "s" {
+			err = "some inventory not populated"
+		}
+	}
+	if err != "err" {
+		t.Errorf("expected error to be nil got %v", err)
+	} else {
+		fmt.Println("PASS")
+	}
+}
+
+// Get all users, check for errors.
+func TestGetAllUsers(t *testing.T) {
+	//Testing routing
+	fmt.Println("Test getAllUsers")
+	req := httptest.NewRequest(http.MethodGet, "/login", nil)
+	w := httptest.NewRecorder()
+	getAllUsers(w, req)
+	res := w.Result()
+	defer res.Body.Close()
+	if err != nil {
+		t.Errorf("expected error to be nil got %v", err)
+	} else {
+		fmt.Println("PASS")
+	}
+}
+
+// Get all inventory
+func TestGetAllItems(t *testing.T) {
+	//Testing routing
+	fmt.Println("Test getAllItems")
+	req := httptest.NewRequest(http.MethodGet, "/inventory", nil)
+	w := httptest.NewRecorder()
+	getAllItems(w, req)
 	res := w.Result()
 	defer res.Body.Close()
 	if err != nil {
