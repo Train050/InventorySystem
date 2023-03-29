@@ -74,6 +74,10 @@
 					<i class="login__icon fas fa-lock"></i>
 					<input [(ngModel)]="registerEmail" name="email" type="email" class="login__input" placeholder="Email" />
 				</div>
+				<div class="login__field">
+					<i class="login__icon fas fa-lock"></i>
+					<input [(ngModel)]="registerPhoneNumber" name="phone number" type="text" class="login__input" placeholder="Phone Number" />
+				</div>
 				<button (click)="register()" class="button login__submit">
 					<span class="button__text">Register Now</span>
 					<i class="button__icon fas fa-chevron-right"></i>
