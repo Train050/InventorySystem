@@ -10,33 +10,43 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { fn } from 'cypress/types/jquery';
+import { AddItemComponent } from './add-item';
 
 describe('AddItemComponent', () => {
-  let component: InventoryHomePageComponent;
-  let fixture: ComponentFixture<InventoryHomePageComponent>;
+  let component: AddItemComponent;
+  let fixture: ComponentFixture<AddItemComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MatFormFieldModule, MatGridListModule, MatPaginatorModule, FormsModule, MatInputModule, MatSortModule, BrowserAnimationsModule, MatDialogModule],
-      declarations: [ InventoryHomePageComponent ],
+      declarations: [ AddItemComponent ],
       schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(InventoryHomePageComponent);
+    fixture = TestBed.createComponent(AddItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-    expect(component.dataSource).toBeTruthy();
-    expect(component.paginator).toBeInstanceOf(MatPaginator);
-    expect(component.applyFilter).toBeTruthy();
-    expect(component).toBeDefined();
-    expect(component.openAddItem).toBeTruthy();
-  });
+  beforeEach(() =>{
+    fixture = TestBed.createComponent(AddItemComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges;
+  })
 
+  it('button click event one way', async(() => {
+    spyOn(component, 'submitItem');
+
+    let button = fixture.debugElement.nativeElement.querySelector('button');
+    button.click(); // you can use     btn.triggerEventHandler('click', null);
+
+    fixture.detectChanges();
+
+    fixture.whenStable().then(() => {
+      expect(component.submitItem).toHaveBeenCalled();
+    });
+  }));
 });
 
 
