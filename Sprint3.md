@@ -6,6 +6,7 @@ The inventory page unit test tests the creation of the components in the invento
 Unit tests for backend: 
 
 TestMakeUser -- Tests creating a user. First tests function call from http request on an empty user with ID = 1, then, manually tests database entry for a fully populated sample user. If an error is thrown at any point during execution, the test fails. If the the final user in the database does not exactly equal the desired test user, the test fails, else, the test passes. This method is not mirrored in future tests, since it will be better to test actual queries from the client in the next sprint.
+
 TestRemoveItem -- Tests removing an item. Tests function call from http request
 
 TestFindItem -- Tests finding an item (empty item). Tests function call from http request on a user with no requested changes. If an error is thrown at any point during execution, the test fails.
