@@ -1,16 +1,12 @@
 import { ComponentFixture, TestBed, async, fakeAsync, tick } from '@angular/core/testing';
-import { InventoryHomePageComponent } from './inventory-home-page.component';
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatInputModule } from '@angular/material/input';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { MatDialogModule } from '@angular/material/dialog';
-import { fn } from 'cypress/types/jquery';
 import { AddItemComponent } from './add-item';
+import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { By } from '@angular/platform-browser';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AddItemComponent', () => {
   let component: AddItemComponent;
@@ -18,9 +14,12 @@ describe('AddItemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatFormFieldModule, MatGridListModule, MatPaginatorModule, FormsModule, MatInputModule, MatSortModule, BrowserAnimationsModule, MatDialogModule],
+      imports: [MatDialogModule, HttpClientTestingModule, MatFormFieldModule, ReactiveFormsModule, MatInputModule, BrowserAnimationsModule],
       declarations: [ AddItemComponent ],
-      schemas: [NO_ERRORS_SCHEMA]
+      providers: [
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MatDialogRef, useValue: {} }
+      ]
     })
     .compileComponents();
 
@@ -28,12 +27,6 @@ describe('AddItemComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
-  beforeEach(() =>{
-    fixture = TestBed.createComponent(AddItemComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges;
-  })
 
   it('button click event one way', async(() => {
     spyOn(component, 'submitItem');
@@ -47,6 +40,14 @@ describe('AddItemComponent', () => {
       expect(component.submitItem).toHaveBeenCalled();
     });
   }));
-});
 
+    it('should call save() method on form submit', () => {
+      /*Get button from html*/
+      fixture.detectChanges();
+      const compiled = fixture.debugElement.nativeElement;
+      // Supply id of your form below formID
+      const getForm = fixture.debugElement.query(By.css('FormGroup'));
+      expect(getForm.triggerEventHandler('submit')).toBeTrue();
+    });
+});
 
