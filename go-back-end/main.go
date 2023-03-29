@@ -161,6 +161,7 @@ func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("User authenticated"))
 }
 
+//Still working on this function
 /*
 func checkToken(next http.HandlerFunc) http.HandlerFunc {
 
