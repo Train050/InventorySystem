@@ -14,7 +14,6 @@ import (
 	//for use with json files
 	//initializers "inventory-system/initializers"
 
-	//routing and database libraries
 	//"github.com/mattn/go-sqlite3"
 	"github.com/bxcodec/faker/v4"
 	"github.com/dgrijalva/jwt-go"
@@ -22,7 +21,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	//
 )
 
 type User struct {
@@ -35,8 +33,8 @@ type User struct {
 }
 
 type Inventory struct {
-	ID            uint   `gorm:"primaryKey"`
-	ProductName   string `gorm:"unique"`
+	ID            uint   //'gorm:"primaryKey"'
+	ProductName   string //'gorm:"unique"'
 	DateAcquired  string
 	ProductAmount uint
 }
@@ -184,30 +182,6 @@ func main() {
 	//create the tables in inventory if they don't already exist
 	db.AutoMigrate(&User{}, &Inventory{})
 
-	//Seeding program to insert random data into the database for users and inventory
-	err := userSeeder(db)
-
-	if err != nil {
-		panic("User seeding failed.")
-	}
-
-	//Seeding the inventory table with 1000 tuples of random data
-	err = inventorySeeder(db)
-
-	if err != nil {
-		panic("Inventory seeding failed.")
-	}
-
-	/*
-		In order to use the routing, be it a GET, PUT, POST, or DELETE action,
-		you must go through the router designated after the slash (/). In the front end,
-		you will use the url to identify the router you are looking to send the information,
-		say /login, and then include the attribute, sent through JSON, that you are
-		looking to input/create/edit, like {ID}. For creating users, the router is sent
-		the entire JSON entity containing all information so no specific attribute is specified.
-
-	*/
-
 	//Creating route definitions for login page
 	//routes for getting the information of the user
 	router.HandleFunc("/login/{ID}", getUserWithID).Methods("GET")
@@ -294,26 +268,7 @@ func getUserWithEmail(w http.ResponseWriter, r *http.Request) {
 // returns all of the users in the database
 func getAllUsers(w http.ResponseWriter, r *http.Request) {
 	var allUsers []User
-	w.Header().Set("Content-Type", "application/json")
-
-	err := db.Find(&allUsers).Error
-
-	if err != nil {
-		w.Write([]byte("All Users Error"))
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	outJson, err := json.Marshal(allUsers)
-
-	if err != nil {
-		w.Write([]byte("Error Marshalling"))
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	// fmt.Printf("test")
-	w.Write(outJson)
+	db.Find(&allUsers)
 	fmt.Println(allUsers)
 }
 
@@ -415,27 +370,9 @@ func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
 
 // function gets the information of all items in the Inventory table
 func getAllItems(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
 	var items []Inventory
-
-	err := db.Find(&items).Error
-
-	if err != nil {
-		w.Write([]byte("All Items Error"))
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	outJson, err := json.Marshal(items)
-
-	if err != nil {
-		w.Write([]byte("Error Marshalling"))
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	// fmt.Printf("test")
-	w.Write(outJson)
+	db.First(&items)
+	fmt.Println(items)
 }
 
 // function removes the tuple that contains the input ID
