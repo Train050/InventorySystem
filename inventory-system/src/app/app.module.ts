@@ -52,6 +52,7 @@ import { AddItemComponent } from './pages/inventory-home-page/add-item';
     ReactiveFormsModule,
     MatSortModule,
     MatIconModule,
+    ReactiveFormsModule
   ],
   providers: [HttpClientModule,{provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}],
   bootstrap: [AppComponent],
