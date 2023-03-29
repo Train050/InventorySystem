@@ -43,7 +43,6 @@ type User struct {
 	Email        string `gorm:"unique; not null"`
 	PhoneNumber  string `gorm:"unique; not null"`
 	HashPassword string `gorm:"not null"`
->>>>>>> e5d3a7adf70577e2e90e169b6fa54ee42259e4ff
 }
 
 type Inventory struct {
