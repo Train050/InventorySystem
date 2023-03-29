@@ -8,8 +8,8 @@ import { AddItemComponent } from 'app/pages/inventory-home-page/add-item';
 export interface UserData {
   id: string;
   name: string;
-  progress: string;
-  fruit: string;
+  date: Date;
+  amount: string;
 }
 
 /** Constants used to fill up our data base. */
@@ -51,7 +51,7 @@ const NAMES: string[] = [
   styleUrls: ['./inventory-home-page.component.scss']
 })
 export class InventoryHomePageComponent {
-  displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
+  displayedColumns: string[] = ['ID', 'name', 'date', 'amount'];
   dataSource: MatTableDataSource<UserData>;
 
   @ViewChild(MatPaginator) paginator:any = MatPaginator;
@@ -96,7 +96,7 @@ function createNewUser(id: number): UserData {
   return {
     id: id.toString(),
     name: name,
-    progress: Math.round(Math.random() * 100).toString(),
-    fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
+    date: new Date,
+    amount: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
   };
 }
