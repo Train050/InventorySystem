@@ -18,19 +18,32 @@ import (
 	"github.com/bxcodec/faker/v4"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+<<<<<<< HEAD
 
 	//	"golang.org/x/crypto/bcrypt"
+=======
+	"golang.org/x/crypto/bcrypt"
+>>>>>>> e5d3a7adf70577e2e90e169b6fa54ee42259e4ff
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 type User struct {
+<<<<<<< HEAD
 	ID          uint   `gorm:"primaryKey"`
 	Username    string `gorm:"unique; not null"`
 	Password    string
 	Email       string `gorm:"unique; not null"`
 	PhoneNumber string `gorm:"unique; not null"`
 	// HashPassword string `gorm:"not null"`
+=======
+	ID           uint   `gorm:"primaryKey"`
+	Username     string `gorm:"unique; not null"`
+	Password     string
+	Email        string `gorm:"unique; not null"`
+	PhoneNumber  string `gorm:"unique; not null"`
+	HashPassword string `gorm:"not null"`
+>>>>>>> e5d3a7adf70577e2e90e169b6fa54ee42259e4ff
 }
 
 type Inventory struct {
@@ -109,7 +122,11 @@ func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 
 	//assigns the username and password to variables
 	username := authArray[0]
+<<<<<<< HEAD
 	// password := authArray[1]
+=======
+	password := authArray[1]
+>>>>>>> e5d3a7adf70577e2e90e169b6fa54ee42259e4ff
 
 	//if the authorization is not empty, then it checks the database for the user
 	var user User
@@ -123,12 +140,21 @@ func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//if the user is found, then it checks the password hash
+<<<<<<< HEAD
 	// err = bcrypt.CompareHashAndPassword([]byte(user.HashPassword), []byte(password))
 	// if err != nil {
 	// 	w.WriteHeader(http.StatusUnauthorized)
 	// 	w.Write([]byte("Username or Password not found"))
 	// 	return
 	// }
+=======
+	err = bcrypt.CompareHashAndPassword([]byte(user.HashPassword), []byte(password))
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("Username or Password not found"))
+		return
+	}
+>>>>>>> e5d3a7adf70577e2e90e169b6fa54ee42259e4ff
 
 	//Creating JWT token for the user
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -374,6 +400,7 @@ func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
 // function gets the information of all items in the Inventory table
 func getAllItems(w http.ResponseWriter, r *http.Request) {
 	var items []Inventory
+<<<<<<< HEAD
 	db.Find(&items) // select * from inventory;
 
 	fmt.Println("getAllItems: ")
@@ -388,6 +415,10 @@ func getAllItems(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("getAllItems failed to JSON marshal. Err: %s", err)
 	}
 	w.Write(jsonResp)
+=======
+	db.First(&items)
+	fmt.Println(items)
+>>>>>>> e5d3a7adf70577e2e90e169b6fa54ee42259e4ff
 }
 
 // function removes the tuple that contains the input ID
