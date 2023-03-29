@@ -43,9 +43,9 @@ var db *gorm.DB
 var err error
 
 // function to seed the database with users
-func userSeeder(database *gorm.DB) error {
-	//creates 100 users with random information
-	for i := 0; i < 100; i++ {
+func userSeeder(database *gorm.DB, entries int) error {
+	//creates users with random information based on the number of entries specified
+	for i := 0; i < entries; i++ {
 		user := User{
 			Username: faker.Username(), Password: faker.Password(), Email: faker.Email(), PhoneNumber: faker.Phonenumber(),
 		}
@@ -60,9 +60,9 @@ func userSeeder(database *gorm.DB) error {
 }
 
 // function to seed the database with items
-func inventorySeeder(database *gorm.DB) error {
-	//creates 100 items with random information
-	for i := 0; i < 100; i++ {
+func inventorySeeder(database *gorm.DB, entries int) error {
+	//creates items with random information based on the number of entries specified
+	for i := 0; i < entries; i++ {
 		item := Inventory{
 			ProductName: faker.Word(), DateAcquired: faker.Date(), ProductAmount: uint(faker.RandomUnixTime()),
 		}
@@ -184,8 +184,8 @@ func main() {
 	}
 
 	//seeds the database with users and items
-	userSeeder(db)
-	inventorySeeder(db)
+	userSeeder(db, 100)
+	inventorySeeder(db, 100)
 
 	//create the tables in inventory if they don't already exist
 	//TODO: the line below triggers a build error
