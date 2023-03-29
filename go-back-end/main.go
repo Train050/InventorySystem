@@ -18,18 +18,19 @@ import (
 	"github.com/bxcodec/faker/v4"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
-	"golang.org/x/crypto/bcrypt"
+
+	//	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 type User struct {
-	ID           uint   `gorm:"primaryKey"`
-	Username     string `gorm:"unique; not null"`
-	Password     string
-	Email        string `gorm:"unique; not null"`
-	PhoneNumber  string `gorm:"unique; not null"`
-	HashPassword string `gorm:"not null"`
+	ID          uint   `gorm:"primaryKey"`
+	Username    string `gorm:"unique; not null"`
+	Password    string
+	Email       string `gorm:"unique; not null"`
+	PhoneNumber string `gorm:"unique; not null"`
+	// HashPassword string `gorm:"not null"`
 }
 
 type Inventory struct {
@@ -108,7 +109,7 @@ func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 
 	//assigns the username and password to variables
 	username := authArray[0]
-	password := authArray[1]
+	// password := authArray[1]
 
 	//if the authorization is not empty, then it checks the database for the user
 	var user User
@@ -122,12 +123,12 @@ func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//if the user is found, then it checks the password hash
-	err = bcrypt.CompareHashAndPassword([]byte(user.HashPassword), []byte(password))
-	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte("Username or Password not found"))
-		return
-	}
+	// err = bcrypt.CompareHashAndPassword([]byte(user.HashPassword), []byte(password))
+	// if err != nil {
+	// 	w.WriteHeader(http.StatusUnauthorized)
+	// 	w.Write([]byte("Username or Password not found"))
+	// 	return
+	// }
 
 	//Creating JWT token for the user
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -181,7 +182,8 @@ func main() {
 	}
 
 	//create the tables in inventory if they don't already exist
-	db.AutoMigrate(&User{}, &Inventory{})
+	//TODO: the line below triggers a build error
+	//db.AutoMigrate(&User{}, &Inventory{})
 
 	//Creating route definitions for login page
 	//routes for getting the information of the user
@@ -372,8 +374,20 @@ func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
 // function gets the information of all items in the Inventory table
 func getAllItems(w http.ResponseWriter, r *http.Request) {
 	var items []Inventory
-	db.First(&items)
+	db.Find(&items) // select * from inventory;
+
+	fmt.Println("getAllItems: ")
 	fmt.Println(items)
+
+	// Setup the backend response so we can return the items in a JSON object:
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	resp := items
+	jsonResp, err := json.Marshal(resp)
+	if err != nil {
+		log.Fatalf("getAllItems failed to JSON marshal. Err: %s", err)
+	}
+	w.Write(jsonResp)
 }
 
 // function removes the tuple that contains the input ID
