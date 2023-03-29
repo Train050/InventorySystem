@@ -40,5 +40,14 @@ describe('AddItemComponent', () => {
       expect(component.submitItem).toHaveBeenCalled();
     });
   }));
+
+    it('should call save() method on form submit', () => {
+      /*Get button from html*/
+      fixture.detectChanges();
+      const compiled = fixture.debugElement.nativeElement;
+      // Supply id of your form below formID
+      const getForm = fixture.debugElement.query(By.css('FormGroup'));
+      expect(getForm.triggerEventHandler('submit')).toBeTrue();
+    });
 });
 
