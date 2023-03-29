@@ -47,7 +47,7 @@ func userSeeder(database *gorm.DB, entries int) error {
 	//creates users with random information based on the number of entries specified
 	for i := 0; i < entries; i++ {
 		user := User{
-			Username: faker.Username(), Password: faker.Password(), Email: faker.Email(), PhoneNumber: faker.Phonenumber(),
+			Username: faker.Username(), Password: faker.Password(), Email: faker.Email(), PhoneNumber: faker.Phonenumber(), HashPassword: faker.Password(),
 		}
 		//creates the user in the database
 		err := db.Create(&user).Error

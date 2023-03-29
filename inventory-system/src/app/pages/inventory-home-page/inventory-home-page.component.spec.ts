@@ -11,7 +11,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { fn } from 'cypress/types/jquery';
 
-describe('AddItemComponent', () => {
+describe('InventoryHomePageComponent', () => {
   let component: InventoryHomePageComponent;
   let fixture: ComponentFixture<InventoryHomePageComponent>;
 
