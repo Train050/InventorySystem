@@ -36,6 +36,7 @@ describe('LoginPageComponent', () => {
       component.registerLastName = 'Doe';
       component.registerEmail = 'johndoe@example.com';
       component.registerPassword = 'password123';
+      component.registerPhoneNumber = '4071231234';
 
       component.register();
 
@@ -46,6 +47,7 @@ describe('LoginPageComponent', () => {
         lastName: 'Doe',
         email: 'johndoe@example.com',
         password: 'password123',
+        phoneNumber: '4071231234'
       });
 
       req.flush({ jwt: 'mock-jwt-token' });
@@ -57,6 +59,7 @@ describe('LoginPageComponent', () => {
       expect(component.registerLastName).toBeNull();
       expect(component.registerEmail).toBeNull();
       expect(component.registerPassword).toBeNull();
+      expect(component.registerPhoneNumber).toBeNull();
     });
   });
 
