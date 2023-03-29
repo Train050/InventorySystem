@@ -272,6 +272,16 @@ func getAllUsers(w http.ResponseWriter, r *http.Request) {
 	var allUsers []User
 	db.Find(&allUsers)
 	fmt.Println(allUsers)
+
+	// Setup the backend response so we can return the items in a JSON object:
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	resp := allUsers
+	jsonResp, err := json.Marshal(resp)
+	if err != nil {
+		log.Fatalf("getAllItems failed to JSON marshal. Err: %s", err)
+	}
+	w.Write(jsonResp)
 }
 
 // function to remove the information of the user by ID
