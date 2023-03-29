@@ -29,7 +29,7 @@ type User struct {
 	Password     string
 	Email        string `gorm:"unique; not null"`
 	PhoneNumber  string `gorm:"unique; not null"`
-	//HashPassword string `gorm:"not null"`
+	HashPassword string `gorm:"not null"`
 }
 
 type Inventory struct {
@@ -181,7 +181,8 @@ func main() {
 	}
 
 	//create the tables in inventory if they don't already exist
-	db.AutoMigrate(&User{}, &Inventory{})
+	//TODO: the line below triggers a build error
+	//db.AutoMigrate(&User{}, &Inventory{})
 
 	//Creating route definitions for login page
 	//routes for getting the information of the user
@@ -372,8 +373,20 @@ func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
 // function gets the information of all items in the Inventory table
 func getAllItems(w http.ResponseWriter, r *http.Request) {
 	var items []Inventory
-	db.First(&items)
+	db.Find(&items) // select * from inventory;
+
+	fmt.Println("getAllItems: ")
 	fmt.Println(items)
+
+	// Setup the backend response so we can return the items in a JSON object:
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	resp := items
+	jsonResp, err := json.Marshal(resp)
+	if err != nil {
+		log.Fatalf("getAllItems failed to JSON marshal. Err: %s", err)
+	}
+	w.Write(jsonResp)
 }
 
 // function removes the tuple that contains the input ID
