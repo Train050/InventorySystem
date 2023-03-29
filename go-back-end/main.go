@@ -23,6 +23,7 @@ import (
 	"gorm.io/gorm"
 )
 
+//User Database
 type User struct {
 	ID           uint   `gorm:"primaryKey"`
 	Username     string `gorm:"unique; not null"`
@@ -32,6 +33,7 @@ type User struct {
 	HashPassword string
 }
 
+//Inventory Database
 type Inventory struct {
 	ID            uint   `gorm:"primaryKey"`
 	ProductName   string `gorm:"not null"`
@@ -52,6 +54,7 @@ func userSeeder(database *gorm.DB, entries int) error {
 		//creates the user in the database
 		err := db.Create(&user).Error
 
+		//if there is an error, return the error
 		if err != nil {
 			return err
 		}
@@ -92,6 +95,7 @@ func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 	encodeAuth := strings.TrimPrefix(auth, "Basic ")
 	decodeAuth, err := base64.StdEncoding.DecodeString(encodeAuth)
 
+	//if there is an error decoding the authorization, return an error
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Authorization failed"))
@@ -164,13 +168,45 @@ func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("User authenticated"))
 }
 
-//Still working on this function
-/*
-func checkToken(next http.HandlerFunc) http.HandlerFunc {
+//Function to check the validity of the token and return the token
+func checkToken(inputToken string) (*jwt.Token, error) {
+		token, err := jwt.ParseWithClaims(inputToken, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 
+		//checks if the token is valid
+		verified := token.Method.(*jwt.SigningMethodHMAC)
+		if (verified == nil) || (verified.Alg() != "HS256") {
+			return nil, fmt.Errorf("Error in token")
+		}
+
+		//secret key to sign the token
+		passKey:= []byte("VerySecretKey")
+		return passKey, nil
+	})
+
+	//if there is an error parsing the token, return an error
+	if err != nil {
+		return nil, err
+	}
+
+	//if the token is not valid, return an error
+	if !token.Valid {
+		return nil, fmt.Errorf("Token is not valid")
+	}
+
+	return token, nil
 }
+
+/*
+	The authentication middleware checks the validity of the token and returns the token if it is valid.
+	It is used to check the validity of the token before allowing the user to access the information. This is
+	used to prevent unauthorized access of the information. The token is valid for 12 hours. The password
+	is hashed and compared to the password in the database. If the password is correct, then the user is
+	authenticated and a token is created for the user. The token is then sent to the user. After, the token is
+	checked for validity before allowing the user to access the information.
 */
 
+// Still need to implement the authenticaiton middleware into the routing to check creditentials before allowing access and 
+// modification of the information
 func main() {
 	router := mux.NewRouter()
 	//authRouter := router.PathPrefix("/api").Subrouter()
@@ -188,10 +224,24 @@ func main() {
 	inventorySeeder(db, 100)
 
 	//create the tables in inventory if they don't already exist
-	//TODO: the line below triggers a build error
 	db.AutoMigrate(&User{}, &Inventory{})
 
+	/*
+		In order to use the routing, be it a GET, PUT, POST, or DELETE action,
+		you must go through the router designated after the slash (/). In the front end,
+		you will use the url to identify the router you are looking to send the information,
+		say /login, and then include the attribute, sent through JSON, that you are
+		looking to input/create/edit, like {ID}. For creating users, the router is sent
+		the entire JSON entity containing all information so no specific attribute is specified.
+
+		Upon the implmentation of the authentication middleware, the user will have their password
+		checked and a token will be created for them. The token will be sent to the user and they
+		will have to send the token back to the server to be checked for validity. This should not
+		affect the routes for front end.
+	*/
+
 	//Creating route definitions for login page
+
 	//routes for getting the information of the user
 	router.HandleFunc("/login/{ID}", getUserWithID).Methods("GET")
 	router.HandleFunc("/login/{Username}", getUserWithUsername).Methods("GET")
@@ -222,6 +272,8 @@ func main() {
 		router.HandleFunc("/inventory/{DateAcquired}", checkToken(getItemsWithDate)).Methods("GET")
 		router.HandleFunc("/inventory", checkToken(getAllItems)).Methods("GET")
 	*/
+
+	//routes for getting the information of items in the inventory
 	router.HandleFunc("/inventory/{ID}", getItemWithID).Methods("GET")
 	router.HandleFunc("/inventory/{ProductName}", getItemWithName).Methods("GET")
 	router.HandleFunc("/inventory/{DateAcquired}", getFirstItemWithDate).Methods("GET")

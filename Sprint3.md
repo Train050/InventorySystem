@@ -1,4 +1,4 @@
-In sprint 3, our group was able further expand and improve upon the functionality of our application. In the back end, we have increased the documentation of routing so that it is easier for the front end to use them. In addition, we have created a seeding program for users and inventory that generates data to populate the database. We introduced an authorization feature that encrypts the password of users and checks their authorization token before allowing them to get data from the database. Additional test cases were created for the previously described features. Regarding the front end, 
+In sprint 3, our group was able further expand and improve upon the functionality of our application. In the back end, we have increased the documentation of routing so that it is easier for the front end to use them. In addition, we have created a seeding program for users and inventory that generates data to populate the database. We introduced an authorization feature that encrypts the password of users and checks their authorization token before allowing them to get data from the database. Authorization has not been fully implemented into the routing yet but the functions to check the hashed password and token have been created. Additional test cases were created for the previously described features, ensuring that all functions work as intended. Regarding the front end, 
 
 The inventory page Cypress test expects to show the inventory page and that it is directed to 'http://localhost:4200/inventory-home-page' and for the paginator to be working. 
 The inventory page unit test tests the creation of the components in the inventory page. 
@@ -34,6 +34,8 @@ updateUserByID -- updates the information of the user by ID
 
 updateUserByUsername -- updates the user information based on the Username and JSON information
 
+userSeeder -- Mock users can be generated and inserted into the database based on the requested number of entries
+
 Inventory API
 
 makeItem -- the function creates a new item tuple in the database through GORM
@@ -56,7 +58,7 @@ updateItemByID -- the function updates the item based on the ID passed through J
 
 updateItemByName -- the function updates the item based on Name passed through JSON object
 
-Routing API
+inventorySeeder -- Mock items can be generated and inserted into the database based on the requested number of entries
 
 Front End testing
 
