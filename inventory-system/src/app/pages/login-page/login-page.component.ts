@@ -15,10 +15,11 @@ export class LoginPageComponent {
   registerFirstName: string | null = null
   registerLastName: string | null = null
   registerEmail: string | null = null
+  registerPhoneNumber: string | null = null
   registerPassword: string | null = null
   loginEmail: string | null = null
   loginPassword: string | null = null
-  url = 'http://httpbin.org/post';
+  
 
   constructor(
     private httpClient: HttpClient,
@@ -33,12 +34,12 @@ export class LoginPageComponent {
       lastName: this.registerLastName,
       email: this.registerEmail,
       password: this.registerPassword,
+      phoneNumber: this.registerPhoneNumber,
     };
-    console.log(postData.firstName, postData.lastName, postData.email, postData.password);
-    this.httpClient.post(this.url, {
-      postData
-     
-    }).subscribe((response: any) => {
+    console.log(postData);
+    this.httpClient.post('http://localhost:8080/login', postData)
+    .subscribe((response: any) => {
+      console.log(response);
       if(response){
         localStorage.setItem('token', response.jwt)
         this.router.navigate(['profile'])
@@ -47,6 +48,7 @@ export class LoginPageComponent {
       this.registerLastName = null
       this.registerEmail = null
       this.registerPassword = null
+      this.registerPhoneNumber = null
     })
   }
   login(){
