@@ -6,6 +6,9 @@ The inventory page unit test tests the creation of the components in the invento
 The login page Cypress test expects for the 'Have an account button' to redirect the user to the sign in page from the register page. 
 The unit test for the Register function shold make an http post request with the user info and be redirected to the user home page. 
 The unit test for the Login function should make an http post request with the login info to authenitcate the user and redirect them to the user home page.
+The login page Cypress test expects for the 'Have an account button' to redirect the user to the sign in page from the register page. 
+The unit test for the Register function shold make an http post request with the user info and be redirected to the user home page. 
+The unit test for the Login function should make an http post request with the login info to authenitcate the user and redirect them to the user home page.
 Unit tests for backend: 
 
 TestMakeUser -- Tests creating a user. First tests function call from http request on an empty user with ID = 1, then, manually tests database entry for a fully populated sample user. If an error is thrown at any point during execution, the test fails. If the the final user in the database does not exactly equal the desired test user, the test fails, else, the test passes. This method is not mirrored in future tests, since it will be better to test actual queries from the client in the next sprint.
@@ -13,6 +16,26 @@ TestMakeUser -- Tests creating a user. First tests function call from http reque
 TestRemoveItem -- Tests removing an item. Tests function call from http request
 
 TestFindItem -- Tests finding an item (empty item). Tests function call from http request on a user with no requested changes. If an error is thrown at any point during execution, the test fails.
+
+TestRemoveUser -- Tests removing a user. Tests function call from http request. If an error is thrown at any point during execution, the test fails.
+
+TestFindUser -- Tests find user function. Tests function call from http request on user from ID. If an error is thrown at any point during execution, the test fails.
+
+TestInsertItem -- Tests creating an item. Tests function call from http request to create an item. If an error is thrown at any point during execution, the test fails.
+
+TestUpdateItem -- Tests updating an item from http request. Tests function call from http request on an item with no requested changes. If an error is thrown at any point during execution, the test fails.
+
+TestRemoveItem -- Tests removing an item. Tests function call from http request on an empty item. If an error is thrown at any point during execution, the test fails.
+
+TestFindItem -- Tests finding an item (empty item). Tests function call from http request on a user with no requested changes. If an error is thrown at any point during execution, the test fails.
+
+TestGetAllItems -- Tests getting all items. Tests function call via testing database from http request. If an error is thrown at any point during execution, the test fails.
+
+TestGetAllUsers -- Tests getting all users. Tests function call via testing database from http request. If an error is thrown at any point during execution, the test fails. 
+
+TestInventorySeeder -- Tests inventory seeding function for product names via mocked database (array). Tests that all elements of array are populated with item names, if not, the test fails.
+
+TestUserSeeder -- Tests user seeding function for product names via mocked database (array). Tests that all elements of array are populated with usernames, if not, the test fails.
 
 TestRemoveUser -- Tests removing a user. Tests function call from http request. If an error is thrown at any point during execution, the test fails.
 

@@ -88,4 +88,31 @@ describe('LoginPageComponent', () => {
       expect(component.loginPassword).toBeNull();
     });
   });
+
+  describe('loginF()', () => {
+    it('should make an HTTP POST request to authenticate the user and redirect to the profile page', () => {
+      spyOn(router, 'navigate');
+
+      component.loginEmail = 'johndoe@example.com';
+      component.loginPassword = 'password123';
+
+      component.login();
+
+      const req = httpTestingController.expectOne('http://localhost:8080/login');
+      expect(req.request.method).toEqual('POST');
+      expect(req.request.body).toEqual({
+        email: 'joedoe@example.com',
+        password: 'password123',
+      });
+
+      req.flush({ jwt: 'mock-jwt-token' });
+
+      expect(localStorage.getItem('token')).toEqual('mock-jwt-token');
+      expect(router.navigate).toHaveBeenCalledWith(['profile']);
+
+      expect(component.loginEmail).toBeNull();
+      expect(component.loginPassword).toBeNull();
+    });
+  });
 });
+
