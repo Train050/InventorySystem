@@ -19,7 +19,7 @@ export class LoginPageComponent {
   registerPassword: string | null = null
   loginEmail: string | null = null
   loginPassword: string | null = null
-  
+  //http://localhost:8080/login
 
   constructor(
     private httpClient: HttpClient,
@@ -37,7 +37,7 @@ export class LoginPageComponent {
       phoneNumber: this.registerPhoneNumber,
     };
     console.log(postData);
-    this.httpClient.post('http://localhost:8080/login', postData)
+    this.httpClient.post('http://localhost:8080/register', postData)
     .subscribe((response: any) => {
       console.log(response);
       if(response){
@@ -52,10 +52,14 @@ export class LoginPageComponent {
     })
   }
   login(){
-    this.httpClient.post('http://localhost:8080/login', {
+    console.log("in login")
+    const postData = {
       email: this.loginEmail,
-      password: this.loginPassword
-    }).subscribe((response: any) => {
+      password: this.loginPassword,
+    };
+    console.log(postData);
+    this.httpClient.post('http://localhost:8080/login', postData) 
+      .subscribe((response: any) => {
       if(response){
         localStorage.setItem('token', response.jwt)
         this.router.navigate(['profile'])

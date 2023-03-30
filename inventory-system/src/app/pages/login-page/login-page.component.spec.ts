@@ -36,6 +36,7 @@ describe('LoginPageComponent', () => {
       component.registerLastName = 'Doe';
       component.registerEmail = 'johndoe@example.com';
       component.registerPassword = 'password123';
+      component.registerPhoneNumber = '4071231234';
 
       component.register();
 
@@ -46,6 +47,7 @@ describe('LoginPageComponent', () => {
         lastName: 'Doe',
         email: 'johndoe@example.com',
         password: 'password123',
+        phoneNumber: '4071231234'
       });
 
       req.flush({ jwt: 'mock-jwt-token' });
@@ -57,6 +59,7 @@ describe('LoginPageComponent', () => {
       expect(component.registerLastName).toBeNull();
       expect(component.registerEmail).toBeNull();
       expect(component.registerPassword).toBeNull();
+      expect(component.registerPhoneNumber).toBeNull();
     });
   });
 
@@ -85,4 +88,31 @@ describe('LoginPageComponent', () => {
       expect(component.loginPassword).toBeNull();
     });
   });
+
+  describe('loginF()', () => {
+    it('should make an HTTP POST request to authenticate the user and redirect to the profile page', () => {
+      spyOn(router, 'navigate');
+
+      component.loginEmail = 'johndoe@example.com';
+      component.loginPassword = 'password123';
+
+      component.login();
+
+      const req = httpTestingController.expectOne('http://localhost:8080/login');
+      expect(req.request.method).toEqual('POST');
+      expect(req.request.body).toEqual({
+        email: 'joedoe@example.com',
+        password: 'password123',
+      });
+
+      req.flush({ jwt: 'mock-jwt-token' });
+
+      expect(localStorage.getItem('token')).toEqual('mock-jwt-token');
+      expect(router.navigate).toHaveBeenCalledWith(['profile']);
+
+      expect(component.loginEmail).toBeNull();
+      expect(component.loginPassword).toBeNull();
+    });
+  });
 });
+
