@@ -41,7 +41,7 @@ describe('AddItemComponent', () => {
     });
   }));
 
-    it('should call save() method on form submit', () => {
+    it('should call submit() method on form submit', () => {
       /*Get button from html*/
       fixture.detectChanges();
       const compiled = fixture.debugElement.nativeElement;
