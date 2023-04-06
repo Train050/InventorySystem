@@ -4,12 +4,15 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatDialog} from '@angular/material/dialog';
 import { AddItemComponent } from 'app/pages/inventory-home-page/add-item';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+
 
 export interface UserData {
-  id: string;
-  name: string;
-  date: Date;
-  amount: string;
+  ID: number;
+  ProductName: string;
+  DateAcquired: string;
+  ProductAmount: number;
 }
 
 /** Constants used to fill up our data base. */
@@ -51,23 +54,27 @@ const NAMES: string[] = [
   styleUrls: ['./inventory-home-page.component.scss']
 })
 export class InventoryHomePageComponent {
-  displayedColumns: string[] = ['ID', 'name', 'date', 'amount'];
+  displayedColumns: string[] = ['ID', 'ProductName', 'DateAcquired', 'ProductAmount'];
   dataSource: MatTableDataSource<UserData>;
 
   @ViewChild(MatPaginator) paginator:any = MatPaginator;
   @ViewChild(MatSort) sort:any = MatSort;
 
-  constructor(public dialog: MatDialog) {
+ public readonly inventoryItems$: Observable<UserData[]> = this.httpClient.get<UserData[]>('http://localhost:4200/api/inventory');
+
+ constructor(public dialog: MatDialog, private readonly httpClient: HttpClient) {
     // Create 100 users
     const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
 
     // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(users);
+    this.dataSource = new MatTableDataSource();
+    this.inventoryItems$.subscribe((items) => { this.dataSource.data = items; this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;});
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    // this.dataSource.paginator = this.paginator;
+    // this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {
@@ -94,9 +101,9 @@ function createNewUser(id: number): UserData {
     '.';
 
   return {
-    id: id.toString(),
-    name: name,
-    date: new Date,
-    amount: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
+    ID: id,
+    ProductName: name,
+    DateAcquired: new Date().toDateString(),
+    ProductAmount: parseInt(FRUITS[Math.round(Math.random() * (FRUITS.length - 1))]),
   };
 }

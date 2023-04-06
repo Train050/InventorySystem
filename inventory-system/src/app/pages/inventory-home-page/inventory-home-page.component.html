@@ -3,31 +3,31 @@
   <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
 </mat-form-field>
 
-<div class="mat-elevation-z8">
+<div class="mat-elevation-z8" >
   <table mat-table [dataSource]="dataSource" matSort>
 
     <!-- ID Column -->
     <ng-container matColumnDef="ID">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-      <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.ID}} </td>
     </ng-container>
 
     <!-- Progress Column -->
-    <ng-container matColumnDef="date">
+    <ng-container matColumnDef="DateAcquired">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Date Acquired </th>
-      <td mat-cell *matCellDef="let row"> {{row.date}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.DateAcquired}} </td>
     </ng-container>
 
     <!-- Name Column -->
-    <ng-container matColumnDef="name">
+    <ng-container matColumnDef="ProductName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Name </th>
-      <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.ProductName}} </td>
     </ng-container>
 
     <!-- Fruit Column -->
-    <ng-container matColumnDef="amount">
+    <ng-container matColumnDef="ProductAmount">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Product Amount </th>
-      <td mat-cell *matCellDef="let row"> {{row.amount}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.ProductAmount}} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

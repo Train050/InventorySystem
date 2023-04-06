@@ -44,6 +44,7 @@ type Inventory struct {
 var db *gorm.DB
 var err error
 
+
 // function to seed the database with users
 func userSeeder(database *gorm.DB, entries int) error {
 	//creates users with random information based on the number of entries specified
@@ -293,6 +294,9 @@ func main() {
 }
 
 //Routing calls for the User table
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	}
 
 // creates the user based on the input information
 func makeUser(w http.ResponseWriter, r *http.Request) {
@@ -441,6 +445,7 @@ func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
 
 // function gets the information of all items in the Inventory table
 func getAllItems(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	var items []Inventory
 	db.Find(&items) // select * from inventory;
 
