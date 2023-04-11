@@ -1,4 +1,7 @@
+<div style="background: #5D54A4; height: 100%; width: 100%">
+<mat-card>
 <mat-form-field>
+
   <mat-label>Filter</mat-label>
   <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
 </mat-form-field>
@@ -41,4 +44,6 @@
 
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
   <button mat-stroked-button style="margin: 1rem;" (click)="openAddItem()">Add Item</button>
+</div>
+</mat-card>
 </div>

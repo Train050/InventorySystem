@@ -23,6 +23,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule} from '@angular/material/icon';
 import { NavComponent } from './pages/inventory-home-page/nav/nav.component';
 import { AddItemComponent } from './pages/inventory-home-page/add-item';
+import { MatCardModule } from '@angular/material/card';
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,7 +53,8 @@ import { AddItemComponent } from './pages/inventory-home-page/add-item';
     ReactiveFormsModule,
     MatSortModule,
     MatIconModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatCardModule
   ],
   providers: [HttpClientModule,{provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}],
   bootstrap: [AppComponent],
