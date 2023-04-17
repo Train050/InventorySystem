@@ -23,7 +23,7 @@ import (
 	"gorm.io/gorm"
 )
 
-//User Database
+// User Database
 type User struct {
 	ID           uint   `gorm:"primaryKey"`
 	Username     string `gorm:"unique; not null"`
@@ -33,7 +33,7 @@ type User struct {
 	HashPassword string
 }
 
-//Inventory Database
+// Inventory Database
 type Inventory struct {
 	ID            uint   `gorm:"primaryKey"`
 	ProductName   string `gorm:"not null"`
@@ -43,7 +43,6 @@ type Inventory struct {
 
 var db *gorm.DB
 var err error
-
 
 // function to seed the database with users
 func userSeeder(database *gorm.DB, entries int) error {
@@ -169,9 +168,9 @@ func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("User authenticated"))
 }
 
-//Function to check the validity of the token and return the token
+// Function to check the validity of the token and return the token
 func checkToken(inputToken string) (*jwt.Token, error) {
-		token, err := jwt.ParseWithClaims(inputToken, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(inputToken, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 
 		//checks if the token is valid
 		verified := token.Method.(*jwt.SigningMethodHMAC)
@@ -180,7 +179,7 @@ func checkToken(inputToken string) (*jwt.Token, error) {
 		}
 
 		//secret key to sign the token
-		passKey:= []byte("VerySecretKey")
+		passKey := []byte("VerySecretKey")
 		return passKey, nil
 	})
 
@@ -206,7 +205,7 @@ func checkToken(inputToken string) (*jwt.Token, error) {
 	checked for validity before allowing the user to access the information.
 */
 
-// Still need to implement the authenticaiton middleware into the routing to check creditentials before allowing access and 
+// Still need to implement the authenticaiton middleware into the routing to check creditentials before allowing access and
 // modification of the information
 func main() {
 	router := mux.NewRouter()
@@ -258,7 +257,7 @@ func main() {
 	router.HandleFunc("/login/{ID}", removeUserByID).Methods("DELETE")
 	router.HandleFunc("/login/{Username}", removeUserByUsername).Methods("DELETE")
 	router.HandleFunc("/login/{Email}", removeUserByEmail).Methods("DELETE")
-	router.HandleFunc("/login/removeAll", removeAllUsers).Methods("DELETE")
+	//router.HandleFunc("/login/removeAll", removeAllUsers).Methods("DELETE")
 
 	//Creating route definitions for registration page (just creating a new user)
 	router.HandleFunc("/registration", makeUser).Methods("POST")
@@ -290,16 +289,16 @@ func main() {
 	//routes for deleting items in the inventory
 	router.HandleFunc("/inventory/{ID}", removeItemByID).Methods("DELETE")
 	router.HandleFunc("/inventory/{ProductName}", removeItemByName).Methods("DELETE")
-	router.HandleFunc("/inventory/removeAll", removeAllItems).Methods("DELETE")
+	//router.HandleFunc("/inventory/removeAll", removeAllItems).Methods("DELETE")
 
 	//Creates the server on port 8080
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
-//Routing calls for the User table
+// Routing calls for the User table
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	}
+}
 
 // creates the user based on the input information
 func makeUser(w http.ResponseWriter, r *http.Request) {
@@ -319,8 +318,8 @@ func getUserWithID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(user)
-	if err != nil {
+	otherErr := json.NewEncoder(w).Encode(user)
+	if otherErr != nil {
 		log.Fatalf("Couldn't encode user. Error: %s", err)
 		return
 	}
@@ -336,15 +335,14 @@ func getUserWithUsername(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(user)
-	if err != nil {
+	otherErr := json.NewEncoder(w).Encode(user)
+	if otherErr != nil {
 		log.Fatalf("Couldn't encode user. Error: %s", err)
 		return
 	}
 
 	//fmt.Println(user)
 }
-
 
 // returns the specific user based on phone number
 func getUserWithPhoneNumber(w http.ResponseWriter, r *http.Request) {
@@ -356,8 +354,8 @@ func getUserWithPhoneNumber(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(user)
-	if err != nil {
+	otherErr := json.NewEncoder(w).Encode(user)
+	if otherErr != nil {
 		log.Fatalf("Couldn't encode user. Error: %s", err)
 		return
 	}
@@ -375,8 +373,8 @@ func getUserWithEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(user)
-	if err != nil {
+	otherErr := json.NewEncoder(w).Encode(user)
+	if otherErr != nil {
 		log.Fatalf("Couldn't encode user. Error: %s", err)
 		return
 	}
@@ -403,10 +401,9 @@ func getAllUsers(w http.ResponseWriter, r *http.Request) {
 // function to remove the information of the user by ID
 func removeUserByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	var user User
 	err := db.Where("ID = ?", vars["ID"]).Delete(&User{})
 
-	if err.Error != nil{
+	if err.Error != nil {
 		fmt.Println("User wasn't deleted")
 		return
 	}
@@ -418,10 +415,9 @@ func removeUserByID(w http.ResponseWriter, r *http.Request) {
 // function to remove the information of the user by Email
 func removeUserByEmail(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	var user User
 	err := db.Where("Email = ?", vars["Email"]).Delete(&User{})
 
-	if err.Error != nil{
+	if err.Error != nil {
 		fmt.Println("User wasn't deleted")
 		return
 	}
@@ -433,10 +429,9 @@ func removeUserByEmail(w http.ResponseWriter, r *http.Request) {
 // function to remove the information of the user by Username
 func removeUserByUsername(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	var user User
 	err := db.Where("Username = ?", vars["Username"]).Delete(&User{})
 
-	if err.Error != nil{
+	if err.Error != nil {
 		fmt.Println("User wasn't deleted")
 		return
 	}
@@ -500,8 +495,8 @@ func getItemWithID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(user)
-	if err != nil {
+	otherErr := json.NewEncoder(w).Encode(item)
+	if otherErr != nil {
 		log.Fatalf("Couldn't encode the Item. Error: %s", err)
 		return
 	}
@@ -517,26 +512,28 @@ func getItemWithName(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(user)
-	if err != nil {
+	otherErr := json.NewEncoder(w).Encode(item)
+	if otherErr != nil {
 		log.Fatalf("Couldn't encode the Item. Error: %s", err)
 		return
+	}
 }
 
 // function retrieves multiple item information based on its date (since it isn't unique)
 func getItemsWithDate(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	var items []Inventory
+	var item Inventory
 	err := db.Where("DateAcquired = ?", vars["DateAcquired"]).First(&item)
 	if err != nil {
 		log.Fatalf("No item with that date found. Error: %s", err)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(user)
-	if err != nil {
+	otherError := json.NewEncoder(w).Encode(item)
+	if otherError != nil {
 		log.Fatalf("Couldn't encode the Item. Error: %s", err)
 		return
+	}
 }
 
 // function retrieves the first item information based on its date
@@ -571,9 +568,9 @@ func getAllItems(w http.ResponseWriter, r *http.Request) {
 func removeItemByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
-	err := db.Where("ID = ?", vars["ID"]).Delete(&item{})
+	err := db.Where("ID = ?", vars["ID"]).Delete(&item)
 
-	if err.Error != nil{
+	if err.Error != nil {
 		fmt.Println("Item wasn't deleted")
 		return
 	}
@@ -586,9 +583,9 @@ func removeItemByID(w http.ResponseWriter, r *http.Request) {
 func removeItemByName(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
-	err := db.Where("Name = ?", vars["Name"]).Delete(&item{})
+	err := db.Where("Name = ?", vars["Name"]).Delete(&item)
 
-	if err.Error != nil{
+	if err.Error != nil {
 		fmt.Println("Item wasn't deleted")
 		return
 	}
@@ -611,12 +608,12 @@ func updateItemById(w http.ResponseWriter, r *http.Request) {
 func updateItemByName(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
-	user := db.First(&item, vars["ProductName"])
+	db.First(&item, vars["ProductName"])
 	json.NewDecoder(r.Body).Decode(&item)
-	user := db.Save(&item)
+	db.Save(&item)
 	fmt.Println(item)
 }
 
 func removeAllItems(db *gorm.DB) {
-	db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&Item{})
+	db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&Inventory{})
 }
