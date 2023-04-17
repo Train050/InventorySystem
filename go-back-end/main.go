@@ -257,6 +257,7 @@ func main() {
 	router.HandleFunc("/login/{ID}", removeUserByID).Methods("DELETE")
 	router.HandleFunc("/login/{Username}", removeUserByUsername).Methods("DELETE")
 	router.HandleFunc("/login/{Email}", removeUserByEmail).Methods("DELETE")
+	router.HandleFunc("/login/removeAll", removeAllUsers).Methods("DELETE")
 
 	//Creating route definitions for registration page (just creating a new user)
 	router.HandleFunc("/registration", makeUser).Methods("POST")
@@ -288,6 +289,7 @@ func main() {
 	//routes for deleting items in the inventory
 	router.HandleFunc("/inventory/{ID}", removeItemByID).Methods("DELETE")
 	router.HandleFunc("/inventory/{ProductName}", removeItemByName).Methods("DELETE")
+	router.HandleFunc("/inventory/removeAll", removeAllItems).Methods("DELETE")
 
 	//Creates the server on port 8080
 	log.Fatal(http.ListenAndServe(":8080", router))
@@ -326,7 +328,7 @@ func getUserWithUsername(w http.ResponseWriter, r *http.Request) {
 func getUserWithEmail(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
-	db.First(&user, vars["Email"])
+	user := db.First(&user, vars["Email"])
 	fmt.Println(user)
 }
 
@@ -401,6 +403,11 @@ func updateUserByUsername(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 }
 
+func removeAllUsers(db *gorm.DB) {
+	//removes all users, regardless of their role (used for redoing the database)
+	db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&User{})
+}
+
 //the routing for the inventory table
 
 // function creates a new item in the Inventory table
@@ -467,7 +474,7 @@ func getAllItems(w http.ResponseWriter, r *http.Request) {
 func removeItemByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
-	db.Delete(&item, vars["ID"])
+	db.Delete(&item.ID, vars["ID"])
 	fmt.Printf("Removed Item: %v\n", item)
 }
 
@@ -475,7 +482,7 @@ func removeItemByID(w http.ResponseWriter, r *http.Request) {
 func removeItemByName(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
-	db.Delete(&item, vars["ProductName"])
+	db.Delete(&item.Name, vars["ProductName"])
 	fmt.Println(item)
 }
 
@@ -493,8 +500,13 @@ func updateItemById(w http.ResponseWriter, r *http.Request) {
 func updateItemByName(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
-	db.First(&item, vars["ProductName"])
+	user := db.First(&item, vars["ProductName"])
 	json.NewDecoder(r.Body).Decode(&item)
-	db.Save(&item)
+	item.Name = 
+	user := db.Save(&item)
 	fmt.Println(item)
+}
+
+func removeAllItems(db *gorm.DB) {
+	db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&Item{})
 }
