@@ -247,6 +247,7 @@ func main() {
 	router.HandleFunc("/login/{ID}", getUserWithID).Methods("GET")
 	router.HandleFunc("/login/{Username}", getUserWithUsername).Methods("GET")
 	router.HandleFunc("/login/{Email}", getUserWithEmail).Methods("GET")
+	router.HandleFunc("/login/{PhoneNumber}", getUserWithEmail).Methods("GET")
 	router.HandleFunc("/login", getAllUsers).Methods("GET")
 
 	//routes for updating the user information
@@ -278,7 +279,7 @@ func main() {
 	//routes for getting the information of items in the inventory
 	router.HandleFunc("/inventory/{ID}", getItemWithID).Methods("GET")
 	router.HandleFunc("/inventory/{ProductName}", getItemWithName).Methods("GET")
-	router.HandleFunc("/inventory/{DateAcquired}", getFirstItemWithDate).Methods("GET")
+	//router.HandleFunc("/inventory/{DateAcquired}", getFirstItemWithDate).Methods("GET")
 	router.HandleFunc("/inventory/{DateAcquired}", getItemsWithDate).Methods("GET")
 	router.HandleFunc("/inventory", getAllItems).Methods("GET")
 
@@ -312,24 +313,73 @@ func makeUser(w http.ResponseWriter, r *http.Request) {
 func getUserWithID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
-	db.First(&user, vars["ID"])
-	fmt.Printf("Got User: %v\n", user)
+	err := db.Where("ID = ?", vars["ID"]).First(&user)
+	if err != nil {
+		log.Fatalf("No with that ID found. Error: %s", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(user)
+	if err != nil {
+		log.Fatalf("Couldn't encode user. Error: %s", err)
+		return
+	}
 }
 
 // returns the specific user based on username
 func getUserWithUsername(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
-	db.First(&user, vars["Username"])
-	fmt.Println(user)
+	err := db.Where("Username = ?", vars["Username"]).First(&user)
+	if err != nil {
+		log.Fatalf("No with that username found. Error: %s", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(user)
+	if err != nil {
+		log.Fatalf("Couldn't encode user. Error: %s", err)
+		return
+	}
+
+	//fmt.Println(user)
+}
+
+
+// returns the specific user based on phone number
+func getUserWithPhoneNumber(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	var user User
+	err := db.Where("PhoneNumber = ?", vars["PhoneNumber"]).First(&user)
+	if err != nil {
+		log.Fatalf("No with that phone number found. Error: %s", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(user)
+	if err != nil {
+		log.Fatalf("Couldn't encode user. Error: %s", err)
+		return
+	}
+
+	//fmt.Println(user)
 }
 
 // returns the specific user based on email
 func getUserWithEmail(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
-	user := db.First(&user, vars["Email"])
-	fmt.Println(user)
+	err := db.Where("Email = ?", vars["Email"]).First(&user)
+	if err != nil {
+		log.Fatalf("No user with that email found. Error: %s", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(user)
+	if err != nil {
+		log.Fatalf("Couldn't encode user. Error: %s", err)
+		return
+	}
 }
 
 // returns all of the users in the database
@@ -343,8 +393,9 @@ func getAllUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	resp := allUsers
 	jsonResp, err := json.Marshal(resp)
+
 	if err != nil {
-		log.Fatalf("getAllItems failed to JSON marshal. Err: %s", err)
+		log.Fatalf("getAllUsers failed to JSON marshal. Error: %s", err)
 	}
 	w.Write(jsonResp)
 }
@@ -443,24 +494,49 @@ func makeItem(w http.ResponseWriter, r *http.Request) {
 func getItemWithID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
-	db.First(&item, vars["ID"])
-	fmt.Printf("Got Item: %v\n", item)
+	err := db.Where("ID = ?", vars["ID"]).First(&item)
+	if err != nil {
+		log.Fatalf("No item with that ID found. Error: %s", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(user)
+	if err != nil {
+		log.Fatalf("Couldn't encode the Item. Error: %s", err)
+		return
+	}
 }
 
 // function retrieves the information of an item based on its name
 func getItemWithName(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
-	db.First(&item, vars["ProductName"])
-	fmt.Println(item)
+	err := db.Where("ProductName = ?", vars["ProductName"]).First(&item)
+	if err != nil {
+		log.Fatalf("No item with that name found. Error: %s", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(user)
+	if err != nil {
+		log.Fatalf("Couldn't encode the Item. Error: %s", err)
+		return
 }
 
 // function retrieves multiple item information based on its date (since it isn't unique)
 func getItemsWithDate(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var items []Inventory
-	db.First(&items, vars["DateAcquired"])
-	fmt.Println(items)
+	err := db.Where("DateAcquired = ?", vars["DateAcquired"]).First(&item)
+	if err != nil {
+		log.Fatalf("No item with that date found. Error: %s", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(user)
+	if err != nil {
+		log.Fatalf("Couldn't encode the Item. Error: %s", err)
+		return
 }
 
 // function retrieves the first item information based on its date
