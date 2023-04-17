@@ -353,24 +353,45 @@ func getAllUsers(w http.ResponseWriter, r *http.Request) {
 func removeUserByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
-	db.Delete(&user, vars["ID"])
-	fmt.Printf("Removed User: %v\n", user)
+	err := db.Where("ID = ?", vars["ID"]).Delete(&User{})
+
+	if err.Error != nil{
+		fmt.Println("User wasn't deleted")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Println("Removed the user")
 }
 
 // function to remove the information of the user by Email
 func removeUserByEmail(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
-	db.Delete(&user, vars["Email"])
-	fmt.Println(user)
+	err := db.Where("Email = ?", vars["Email"]).Delete(&User{})
+
+	if err.Error != nil{
+		fmt.Println("User wasn't deleted")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Println("Removed the user")
 }
 
 // function to remove the information of the user by Username
 func removeUserByUsername(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var user User
-	db.Delete(&user, vars["ID"])
-	fmt.Println(user)
+	err := db.Where("Username = ?", vars["Username"]).Delete(&User{})
+
+	if err.Error != nil{
+		fmt.Println("User wasn't deleted")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Println("Removed the user")
 }
 
 // function to update the information of the user by ID
@@ -474,16 +495,30 @@ func getAllItems(w http.ResponseWriter, r *http.Request) {
 func removeItemByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
-	db.Delete(&item.ID, vars["ID"])
-	fmt.Printf("Removed Item: %v\n", item)
+	err := db.Where("ID = ?", vars["ID"]).Delete(&item{})
+
+	if err.Error != nil{
+		fmt.Println("Item wasn't deleted")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Println("Removed the Item")
 }
 
 // function removes the tuple by the product name
 func removeItemByName(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var item Inventory
-	db.Delete(&item.Name, vars["ProductName"])
-	fmt.Println(item)
+	err := db.Where("Name = ?", vars["Name"]).Delete(&item{})
+
+	if err.Error != nil{
+		fmt.Println("Item wasn't deleted")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Println("Removed the Item")
 }
 
 // function updates the item based on the ID
@@ -502,7 +537,6 @@ func updateItemByName(w http.ResponseWriter, r *http.Request) {
 	var item Inventory
 	user := db.First(&item, vars["ProductName"])
 	json.NewDecoder(r.Body).Decode(&item)
-	item.Name = 
 	user := db.Save(&item)
 	fmt.Println(item)
 }
