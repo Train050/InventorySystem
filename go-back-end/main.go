@@ -314,13 +314,13 @@ func getUserWithID(w http.ResponseWriter, r *http.Request) {
 	var user User
 	err := db.Where("ID = ?", vars["ID"]).First(&user)
 	if err != nil {
-		log.Fatalf("No with that ID found. Error: %s", err)
+		log.Fatalf("No with that ID found.")
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	otherErr := json.NewEncoder(w).Encode(user)
 	if otherErr != nil {
-		log.Fatalf("Couldn't encode user. Error: %s", err)
+		log.Fatalf("Couldn't encode user")
 		return
 	}
 }
@@ -331,13 +331,13 @@ func getUserWithUsername(w http.ResponseWriter, r *http.Request) {
 	var user User
 	err := db.Where("Username = ?", vars["Username"]).First(&user)
 	if err != nil {
-		log.Fatalf("No with that username found. Error: %s", err)
+		log.Fatalf("No with that username found.")
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	otherErr := json.NewEncoder(w).Encode(user)
 	if otherErr != nil {
-		log.Fatalf("Couldn't encode user. Error: %s", err)
+		log.Fatalf("Couldn't encode user.")
 		return
 	}
 
@@ -350,13 +350,13 @@ func getUserWithPhoneNumber(w http.ResponseWriter, r *http.Request) {
 	var user User
 	err := db.Where("PhoneNumber = ?", vars["PhoneNumber"]).First(&user)
 	if err != nil {
-		log.Fatalf("No with that phone number found. Error: %s", err)
+		log.Fatalf("No with that phone number found")
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	otherErr := json.NewEncoder(w).Encode(user)
 	if otherErr != nil {
-		log.Fatalf("Couldn't encode user. Error: %s", err)
+		log.Fatalf("Couldn't encode user")
 		return
 	}
 
@@ -369,13 +369,13 @@ func getUserWithEmail(w http.ResponseWriter, r *http.Request) {
 	var user User
 	err := db.Where("Email = ?", vars["Email"]).First(&user)
 	if err != nil {
-		log.Fatalf("No user with that email found. Error: %s", err)
+		log.Fatalf("No user with that email found.")
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	otherErr := json.NewEncoder(w).Encode(user)
 	if otherErr != nil {
-		log.Fatalf("Couldn't encode user. Error: %s", err)
+		log.Fatalf("Couldn't encode user.")
 		return
 	}
 }
@@ -491,13 +491,13 @@ func getItemWithID(w http.ResponseWriter, r *http.Request) {
 	var item Inventory
 	err := db.Where("ID = ?", vars["ID"]).First(&item)
 	if err != nil {
-		log.Fatalf("No item with that ID found. Error: %s", err)
+		log.Fatalf("No item with that ID found.")
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	otherErr := json.NewEncoder(w).Encode(item)
 	if otherErr != nil {
-		log.Fatalf("Couldn't encode the Item. Error: %s", err)
+		log.Fatalf("Couldn't encode the Item")
 		return
 	}
 }
@@ -508,13 +508,13 @@ func getItemWithName(w http.ResponseWriter, r *http.Request) {
 	var item Inventory
 	err := db.Where("ProductName = ?", vars["ProductName"]).First(&item)
 	if err != nil {
-		log.Fatalf("No item with that name found. Error: %s", err)
+		log.Fatalf("No item with that name found.")
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	otherErr := json.NewEncoder(w).Encode(item)
 	if otherErr != nil {
-		log.Fatalf("Couldn't encode the Item. Error: %s", err)
+		log.Fatalf("Couldn't encode the Item.")
 		return
 	}
 }
@@ -525,13 +525,13 @@ func getItemsWithDate(w http.ResponseWriter, r *http.Request) {
 	var item Inventory
 	err := db.Where("DateAcquired = ?", vars["DateAcquired"]).First(&item)
 	if err != nil {
-		log.Fatalf("No item with that date found. Error: %s", err)
+		log.Fatalf("No item with that date found.")
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	otherError := json.NewEncoder(w).Encode(item)
 	if otherError != nil {
-		log.Fatalf("Couldn't encode the Item. Error: %s", err)
+		log.Fatalf("Couldn't encode the Item.")
 		return
 	}
 }
