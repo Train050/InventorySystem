@@ -60,11 +60,7 @@
 			<form class="register" action="./inventory-home-page" method="post">
 				<div class="login__field">
 					<i class="login__icon fas fa-user"></i>
-					<input [(ngModel)]="registerFirstName" name="first" type="text" class="login__input" placeholder="First Name" />
-				</div>
-				<div class="login__field">
-					<i class="login__icon fas fa-lock"></i>
-					<input [(ngModel)]="registerLastName" name="last" type="text" class="login__input" placeholder="Last Name" />
+					<input [(ngModel)]="registerUserName" name="user" type="text" class="login__input" placeholder="Username" />
 				</div>
 				<div class="login__field">
 					<i class="login__icon fas fa-lock"></i>
@@ -72,7 +68,7 @@
 				</div>
                 <div class="login__field">
 					<i class="login__icon fas fa-lock"></i>
-					<input [(ngModel)]="registerEmail" name="email" type="email" class="login__input" placeholder="Email" />
+					<input [(ngModel)]="registerEmail" name="email" type="text" class="login__input" placeholder="Email" />
 				</div>
 				<div class="login__field">
 					<i class="login__icon fas fa-lock"></i>
