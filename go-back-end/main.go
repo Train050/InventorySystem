@@ -302,6 +302,7 @@ func enableCors(w *http.ResponseWriter) {
 
 // creates the user based on the input information
 func makeUser(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	var user User
 	json.NewDecoder(r.Body).Decode(&user)
 	db.Create(&user)
@@ -310,6 +311,7 @@ func makeUser(w http.ResponseWriter, r *http.Request) {
 
 // returns the specific user based on the ID
 func getUserWithID(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
 	err := db.Where("ID = ?", vars["ID"]).First(&user)
@@ -327,6 +329,7 @@ func getUserWithID(w http.ResponseWriter, r *http.Request) {
 
 // returns the specific user based on username
 func getUserWithUsername(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
 	err := db.Where("Username = ?", vars["Username"]).First(&user)
@@ -346,6 +349,7 @@ func getUserWithUsername(w http.ResponseWriter, r *http.Request) {
 
 // returns the specific user based on phone number
 func getUserWithPhoneNumber(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
 	err := db.Where("PhoneNumber = ?", vars["PhoneNumber"]).First(&user)
@@ -365,6 +369,7 @@ func getUserWithPhoneNumber(w http.ResponseWriter, r *http.Request) {
 
 // returns the specific user based on email
 func getUserWithEmail(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
 	err := db.Where("Email = ?", vars["Email"]).First(&user)
@@ -382,6 +387,7 @@ func getUserWithEmail(w http.ResponseWriter, r *http.Request) {
 
 // returns all of the users in the database
 func getAllUsers(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	var allUsers []User
 	db.Find(&allUsers)
 	fmt.Println(allUsers)
@@ -400,6 +406,7 @@ func getAllUsers(w http.ResponseWriter, r *http.Request) {
 
 // function to remove the information of the user by ID
 func removeUserByID(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	err := db.Where("ID = ?", vars["ID"]).Delete(&User{})
 
@@ -414,6 +421,7 @@ func removeUserByID(w http.ResponseWriter, r *http.Request) {
 
 // function to remove the information of the user by Email
 func removeUserByEmail(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	err := db.Where("Email = ?", vars["Email"]).Delete(&User{})
 
@@ -428,6 +436,7 @@ func removeUserByEmail(w http.ResponseWriter, r *http.Request) {
 
 // function to remove the information of the user by Username
 func removeUserByUsername(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	err := db.Where("Username = ?", vars["Username"]).Delete(&User{})
 
@@ -442,6 +451,7 @@ func removeUserByUsername(w http.ResponseWriter, r *http.Request) {
 
 // function to update the information of the user by ID
 func updateUserById(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
 
@@ -457,6 +467,7 @@ func updateUserById(w http.ResponseWriter, r *http.Request) {
 
 // function to update the information of the user by
 func updateUserByUsername(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
 
@@ -479,6 +490,7 @@ func removeAllUsers(db *gorm.DB) {
 
 // function creates a new item in the Inventory table
 func makeItem(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	var item Inventory
 	json.NewDecoder(r.Body).Decode(&item)
 	db.Create(&item)
@@ -487,6 +499,7 @@ func makeItem(w http.ResponseWriter, r *http.Request) {
 
 // fuction retrieves the information of an item based on its ID
 func getItemWithID(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
 	err := db.Where("ID = ?", vars["ID"]).First(&item)
@@ -504,6 +517,7 @@ func getItemWithID(w http.ResponseWriter, r *http.Request) {
 
 // function retrieves the information of an item based on its name
 func getItemWithName(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
 	err := db.Where("ProductName = ?", vars["ProductName"]).First(&item)
@@ -521,6 +535,7 @@ func getItemWithName(w http.ResponseWriter, r *http.Request) {
 
 // function retrieves multiple item information based on its date (since it isn't unique)
 func getItemsWithDate(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
 	err := db.Where("DateAcquired = ?", vars["DateAcquired"]).First(&item)
@@ -538,6 +553,7 @@ func getItemsWithDate(w http.ResponseWriter, r *http.Request) {
 
 // function retrieves the first item information based on its date
 func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
 	db.First(&item, vars["DateAcquired"])
@@ -566,6 +582,7 @@ func getAllItems(w http.ResponseWriter, r *http.Request) {
 
 // function removes the tuple that contains the input ID
 func removeItemByID(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
 	err := db.Where("ID = ?", vars["ID"]).Delete(&item)
@@ -581,6 +598,7 @@ func removeItemByID(w http.ResponseWriter, r *http.Request) {
 
 // function removes the tuple by the product name
 func removeItemByName(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
 	err := db.Where("Name = ?", vars["Name"]).Delete(&item)
@@ -596,6 +614,7 @@ func removeItemByName(w http.ResponseWriter, r *http.Request) {
 
 // function updates the item based on the ID
 func updateItemById(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
 	db.First(&item, vars["ID"])
@@ -606,6 +625,7 @@ func updateItemById(w http.ResponseWriter, r *http.Request) {
 
 // function updates the item based on the item Name
 func updateItemByName(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
 	db.First(&item, vars["ProductName"])
