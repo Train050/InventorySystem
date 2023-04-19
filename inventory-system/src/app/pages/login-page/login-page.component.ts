@@ -27,14 +27,16 @@ export class LoginPageComponent {
   }
   register(){
     console.log("in register");
+    //console.log(postData);
     const postData = {
+      
       userName: this.registerUserName,
       email: this.registerEmail,
       password: this.registerPassword,
       phoneNumber: this.registerPhoneNumber,
     };
-    //console.log(postData);
-    this.httpClient.post('http://localhost:8080/register', postData)
+    console.log(postData);
+    this.httpClient.post('http://localhost:8080/registration', postData)
       .subscribe((response: any) => {
       console.log(response);
       if(response){
