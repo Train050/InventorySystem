@@ -46,7 +46,7 @@ var db *gorm.DB
 var err error
 
 // function to seed the database with users
-/*func userSeeder(database *gorm.DB, entries int) error {
+func userSeeder(database *gorm.DB, entries int) error {
 	//creates users with random information based on the number of entries specified
 	for i := 0; i < entries; i++ {
 		user := User{
@@ -80,7 +80,7 @@ func inventorySeeder(database *gorm.DB, entries int) error {
 	}
 	return nil
 }
-*/
+
 // Checks the authorization of users requesting information
 func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 
@@ -309,6 +309,9 @@ func main() {
 	//router.HandleFunc("/inventory/{DateAcquired}", getFirstItemWithDate).Methods("GET")
 	router.HandleFunc("/api/inventory/{DateAcquired}", getItemsWithDate).Methods("GET")
 	router.HandleFunc("http://localhost:4200/api/inventory", getAllItems).Methods("GET")
+	router.HandleFunc("http://localhost:4200/inventory", getAllItems).Methods("GET")
+	router.HandleFunc("http://localhost:8080/api/inventory", getAllItems).Methods("GET")
+	router.HandleFunc("http://localhost:8080/inventory", getAllItems).Methods("GET")
 
 	//routes for updating the information of items in the inventory
 	router.HandleFunc("/inventory/{ID}", updateItemById).Methods("PUT")
