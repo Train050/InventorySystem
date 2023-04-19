@@ -285,8 +285,9 @@ func main() {
 	//Creating route definitions for inventory page (waiting for front end to send inventory json)
 	//route for creating a new item
 	router.HandleFunc("http://localhost:4200/inventory", makeItem).Methods("POST")
-
 	router.HandleFunc("http://localhost:4200/api/inventory", makeItem).Methods("POST")
+	router.HandleFunc("/inventory", makeItem).Methods("POST")
+	router.HandleFunc("/api/inventory", makeItem).Methods("POST")
 
 	//routes for getting the information of items in the inventory
 	/*
