@@ -365,15 +365,16 @@ func getUserWithID(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
-	err := db.First(&user, vars["ID"])
+	err := db.Where("ID = ?", vars["ID"]).First(&user)
+	//print(err)
 	if err != nil {
-		log.Fatalf("No user with that ID found.")
+		log.Print("No user with that ID found.")
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	otherErr := json.NewEncoder(w).Encode(user)
 	if otherErr != nil {
-		log.Fatalf("Couldn't encode user")
+		log.Print("Couldn't encode user")
 		return
 	}
 }
@@ -385,7 +386,7 @@ func getUserWithUsername(w http.ResponseWriter, r *http.Request) {
 	var user User
 	err := db.Where("Username = ?", vars["Username"]).First(&user)
 	if err != nil {
-		log.Fatalf("No with that username found.")
+		log.Print("No with that username found.")
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -553,9 +554,9 @@ func getItemWithID(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
-	err := db.First(&item, vars["ID"])
+	err := db.Where("ID = ?", vars["ID"]).First(&item)
 	if err != nil {
-		log.Fatalf("No item with that ID found.")
+		log.Print("No item with that ID found.")
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")

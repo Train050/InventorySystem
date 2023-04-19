@@ -66,7 +66,7 @@ func TestMakeUser(t *testing.T) {
 func TestUpdateUser(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPut, "/login/{1}", nil)
 	w := httptest.NewRecorder()
-	getUserWithID(w, req)
+	updateUserById(w, req)
 	res := w.Result()
 	defer res.Body.Close()
 	if err != nil {
@@ -130,10 +130,10 @@ func TestUpdateItem(t *testing.T) {
 	}
 }
 
-func TestRemoveItem(t *testing.T) {
-	req := httptest.NewRequest(http.MethodDelete, "/inventory/{1}", nil)
+func TestFindItem(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/inventory/{1}", nil)
 	w := httptest.NewRecorder()
-	updateItemById(w, req)
+	getItemWithID(w, req)
 	res := w.Result()
 	defer res.Body.Close()
 	if err != nil {
@@ -142,11 +142,10 @@ func TestRemoveItem(t *testing.T) {
 		fmt.Println("PASS")
 	}
 }
-
-func TestFindItem(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "/inventory/{1}", nil)
+func TestRemoveItem(t *testing.T) {
+	req := httptest.NewRequest(http.MethodDelete, "/inventory/{1}", nil)
 	w := httptest.NewRecorder()
-	getItemWithID(w, req)
+	updateItemById(w, req)
 	res := w.Result()
 	defer res.Body.Close()
 	if err != nil {
@@ -238,6 +237,28 @@ func TestGetAllItems(t *testing.T) {
 	getAllItems(w, req)
 	res := w.Result()
 	defer res.Body.Close()
+	if err != nil {
+		t.Errorf("expected error to be nil got %v", err)
+	} else {
+		fmt.Println("PASS")
+	}
+}
+
+//Sprint 4 tests
+
+func TestRemoveAllUsers(t *testing.T) {
+	print("test remove all users")
+	removeAllUsers(db)
+	if err != nil {
+		t.Errorf("expected error to be nil got %v", err)
+	} else {
+		fmt.Println("PASS")
+	}
+}
+
+func TestRemoveAllItems(t *testing.T) {
+	print("test remove all users")
+	removeAllItems(db)
 	if err != nil {
 		t.Errorf("expected error to be nil got %v", err)
 	} else {
