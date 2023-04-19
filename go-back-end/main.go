@@ -46,7 +46,7 @@ var db *gorm.DB
 var err error
 
 // function to seed the database with users
-func userSeeder(database *gorm.DB, entries int) error {
+/*func userSeeder(database *gorm.DB, entries int) error {
 	//creates users with random information based on the number of entries specified
 	for i := 0; i < entries; i++ {
 		user := User{
@@ -80,7 +80,7 @@ func inventorySeeder(database *gorm.DB, entries int) error {
 	}
 	return nil
 }
-
+*/
 // Checks the authorization of users requesting information
 func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 
