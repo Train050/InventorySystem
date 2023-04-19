@@ -211,7 +211,7 @@ func checkToken(inputToken string) (*jwt.Token, error) {
 func main() {
 	router := mux.NewRouter()
 
-	handler := cors.Default().Handler(router)
+	handler := cors.AllowAll().Handler(router)
 	//authRouter := router.PathPrefix("/api").Subrouter()
 
 	//opens the SQLite3 database inventory (or creates it if it doesn't exist)
@@ -303,15 +303,14 @@ func main() {
 	//router.HandleFunc("/inventory/{DateAcquired}", getFirstItemWithDate).Methods("GET")
 	router.HandleFunc("/inventory/{DateAcquired}", getItemsWithDate).Methods("GET")
 	router.HandleFunc("http://localhost:4200/inventory", getAllItems).Methods("GET")
+	router.HandleFunc("http://localhost:4200/api/inventory", getAllItems).Methods("GET")
 
 	router.HandleFunc("/api/inventory/{ID}", getItemWithID).Methods("GET")
 	router.HandleFunc("/api/inventory/{ProductName}", getItemWithName).Methods("GET")
 	//router.HandleFunc("/inventory/{DateAcquired}", getFirstItemWithDate).Methods("GET")
 	router.HandleFunc("/api/inventory/{DateAcquired}", getItemsWithDate).Methods("GET")
-	router.HandleFunc("http://localhost:4200/api/inventory", getAllItems).Methods("GET")
-	router.HandleFunc("http://localhost:4200/inventory", getAllItems).Methods("GET")
-	router.HandleFunc("http://localhost:8080/api/inventory", getAllItems).Methods("GET")
-	router.HandleFunc("http://localhost:8080/inventory", getAllItems).Methods("GET")
+	router.HandleFunc("/inventory", getAllItems).Methods("GET")
+	router.HandleFunc("/api/inventory", getAllItems).Methods("GET")
 
 	//routes for updating the information of items in the inventory
 	router.HandleFunc("/inventory/{ID}", updateItemById).Methods("PUT")
@@ -685,6 +684,7 @@ func updateItemByName(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(item)
 }
 
+// clears all items from the database but keeps the table schema
 func removeAllItems(db *gorm.DB) {
 	db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&Inventory{})
 }
