@@ -45,7 +45,7 @@ var db *gorm.DB
 var err error
 
 // function to seed the database with users
-func userSeeder(database *gorm.DB, entries int) error {
+/*func userSeeder(database *gorm.DB, entries int) error {
 	//creates users with random information based on the number of entries specified
 	for i := 0; i < entries; i++ {
 		user := User{
@@ -79,7 +79,7 @@ func inventorySeeder(database *gorm.DB, entries int) error {
 	}
 	return nil
 }
-
+*/
 // Checks the authorization of users requesting information
 func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 
@@ -249,9 +249,18 @@ func main() {
 	router.HandleFunc("/login/{PhoneNumber}", getUserWithEmail).Methods("GET")
 	router.HandleFunc("/login", getAllUsers).Methods("GET")
 
+	router.HandleFunc("/api/login/{ID}", getUserWithID).Methods("GET")
+	router.HandleFunc("/api/login/{Username}", getUserWithUsername).Methods("GET")
+	router.HandleFunc("/api/login/{Email}", getUserWithEmail).Methods("GET")
+	router.HandleFunc("/api/login/{PhoneNumber}", getUserWithEmail).Methods("GET")
+	router.HandleFunc("/api/login", getAllUsers).Methods("GET")
+
 	//routes for updating the user information
 	router.HandleFunc("/login/{ID}", updateUserById).Methods("PUT")
 	router.HandleFunc("/login/{Username}", updateUserByUsername).Methods("PUT")
+
+	router.HandleFunc("/api/login/{ID}", updateUserById).Methods("PUT")
+	router.HandleFunc("/api/login/{Username}", updateUserByUsername).Methods("PUT")
 
 	//routes for deleting the user based on input field (All unique attributes)
 	router.HandleFunc("/login/{ID}", removeUserByID).Methods("DELETE")
@@ -259,12 +268,20 @@ func main() {
 	router.HandleFunc("/login/{Email}", removeUserByEmail).Methods("DELETE")
 	//router.HandleFunc("/login/removeAll", removeAllUsers).Methods("DELETE")
 
+	router.HandleFunc("/api/login/{ID}", removeUserByID).Methods("DELETE")
+	router.HandleFunc("/api/login/{Username}", removeUserByUsername).Methods("DELETE")
+	router.HandleFunc("/api/login/{Email}", removeUserByEmail).Methods("DELETE")
+
 	//Creating route definitions for registration page (just creating a new user)
-	router.HandleFunc("/registration", makeUser).Methods("POST")
+	router.HandleFunc("http://localhost:4200/register", makeUser).Methods("POST")
+	router.HandleFunc("http://localhost:8080/register", makeUser).Methods("POST")
+
+	router.HandleFunc("http://localhost:4200/register", makeUser).Methods("POST")
+	router.HandleFunc("http://localhost:8080/register", makeUser).Methods("POST")
 
 	//Creating route definitions for inventory page (waiting for front end to send inventory json)
 	//route for creating a new item
-	router.HandleFunc("/inventory", makeItem).Methods("POST")
+	router.HandleFunc("http://localhost:4200/inventory", makeItem).Methods("POST")
 
 	//routes for getting the information of items in the inventory
 	/*
@@ -298,15 +315,29 @@ func main() {
 // Routing calls for the User table
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+
 }
 
 // creates the user based on the input information
 func makeUser(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	var user User
-	json.NewDecoder(r.Body).Decode(&user)
-	db.Create(&user)
-	fmt.Printf("Created User %v\n", user)
+	decode := json.NewDecoder(r.Body).Decode(&user)
+	if decode != nil {
+		http.Error(w, decode.Error(), http.StatusBadRequest)
+		return
+	}
+	create := db.Create(&user)
+	if create.Error != nil {
+		http.Error(w, create.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // returns the specific user based on the ID
