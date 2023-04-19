@@ -278,10 +278,9 @@ func main() {
 
 	//Creating route definitions for registration page (just creating a new user)
 	router.HandleFunc("http://localhost:4200/register", makeUser).Methods("POST")
-	router.HandleFunc("http://localhost:8080/register", makeUser).Methods("POST")
-
 	router.HandleFunc("http://localhost:4200/api/register", makeUser).Methods("POST")
-	router.HandleFunc("http://localhost:8080/api/register", makeUser).Methods("POST")
+	router.HandleFunc("/registration", makeUser).Methods("POST")
+	router.HandleFunc("/api/registration", makeUser).Methods("POST")
 
 	//Creating route definitions for inventory page (waiting for front end to send inventory json)
 	//route for creating a new item
