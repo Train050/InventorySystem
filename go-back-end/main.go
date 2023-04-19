@@ -365,9 +365,9 @@ func getUserWithID(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
-	err := db.Where("ID = ?", vars["ID"]).First(&user)
+	err := db.First(&user, vars["ID"])
 	if err != nil {
-		log.Fatalf("No with that ID found.")
+		log.Fatalf("No user with that ID found.")
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -553,7 +553,7 @@ func getItemWithID(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
-	err := db.Where("ID = ?", vars["ID"]).First(&item)
+	err := db.First(&item, vars["ID"])
 	if err != nil {
 		log.Fatalf("No item with that ID found.")
 		return
