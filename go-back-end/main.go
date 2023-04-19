@@ -16,6 +16,7 @@ import (
 
 	//"github.com/mattn/go-sqlite3"
 
+	"github.com/bxcodec/faker/v4"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
