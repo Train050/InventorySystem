@@ -42,6 +42,10 @@ TestInventorySeeder -- Tests inventory seeding function for product names via mo
 
 TestUserSeeder -- Tests user seeding function for product names via mocked database (array). Tests that all elements of array are populated with usernames, if not, the test fails.
 
+TestRemoveAllUsers -- Tests clearing all users from the database. If an error is thrown, the test fails.
+
+TestRemoveALlItesm -- Tests clearing all items from the database. If an error is thrown, the test fails.
+
 API Documentation
 User API
 
