@@ -1,15 +1,14 @@
+describe('Login Test', () => {
+  it('Logs in and redirects to inventory page', () => {
+    cy.visit('http://localhost:4200/login-page') // Replace with your login page URL
 
-describe('Button position test', () => {
-    it('Button should change position when another button is clicked', () => {
-      cy.visit('http://localhost:53597/login-page');
-      cy.get('.login__submit').eq(1).then(($button) => {
-        const initialPosition = $button.position();
-        cy.get('.login__submit').eq(1).click();
-        cy.wait(1000); // wait for 1 second for the position change to happen
-        cy.get('.login__submit').eq(1).then(($button) => {
-          const newPosition = $button.position();
-          expect(newPosition).to.not.equal(initialPosition);
-        });
-      });
-    });
-  });
+    // Enter username and password and submit the form
+    cy.get('user').type('Username')
+    cy.get('#password').type('mypassword')
+    cy.get('button[type="submit"]').click()
+
+    // Wait for the login to complete and redirect to inventory page
+    cy.url().should('http://localhost:4200/inventory-home-page') // Replace with your inventory page URL
+  })
+})
+
