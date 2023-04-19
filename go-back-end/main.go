@@ -285,8 +285,9 @@ func main() {
 	//Creating route definitions for inventory page (waiting for front end to send inventory json)
 	//route for creating a new item
 	router.HandleFunc("http://localhost:4200/inventory", makeItem).Methods("POST")
-
 	router.HandleFunc("http://localhost:4200/api/inventory", makeItem).Methods("POST")
+	router.HandleFunc("/inventory", makeItem).Methods("POST")
+	router.HandleFunc("/api/inventory", makeItem).Methods("POST")
 
 	//routes for getting the information of items in the inventory
 	/*
@@ -364,9 +365,9 @@ func getUserWithID(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
-	err := db.Where("ID = ?", vars["ID"]).First(&user)
+	err := db.First(&user, vars["ID"])
 	if err != nil {
-		log.Fatalf("No with that ID found.")
+		log.Fatalf("No user with that ID found.")
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -552,7 +553,7 @@ func getItemWithID(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
-	err := db.Where("ID = ?", vars["ID"]).First(&item)
+	err := db.First(&item, vars["ID"])
 	if err != nil {
 		log.Fatalf("No item with that ID found.")
 		return
