@@ -12,8 +12,7 @@ import { HttpClient } from '@angular/common/http';
 export class LoginPageComponent {
   
   isLogin: boolean = false
-  registerFirstName: string | null = null
-  registerLastName: string | null = null
+  registerUserName: string | null = null
   registerEmail: string | null = null
   registerPhoneNumber: string | null = null
   registerPassword: string | null = null
@@ -28,24 +27,23 @@ export class LoginPageComponent {
   }
   register(){
     console.log("in register");
+    //console.log(postData);
     const postData = {
       
-      firstName: this.registerFirstName,
-      lastName: this.registerLastName,
+      userName: this.registerUserName,
       email: this.registerEmail,
       password: this.registerPassword,
       phoneNumber: this.registerPhoneNumber,
     };
     console.log(postData);
-    this.httpClient.post('http://localhost:8080/register', postData)
-    .subscribe((response: any) => {
+    this.httpClient.post('http://localhost:8080/registration', postData)
+      .subscribe((response: any) => {
       console.log(response);
       if(response){
         localStorage.setItem('token', response.jwt)
         this.router.navigate(['profile'])
       }
-      this.registerFirstName = null
-      this.registerLastName = null
+      this.registerUserName = null
       this.registerEmail = null
       this.registerPassword = null
       this.registerPhoneNumber = null

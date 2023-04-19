@@ -1,7 +1,5 @@
 Sprint 4 progress:
-    Front-end:
-
-    Back-end:
+This sprint has been primarily foucsed on fixing bugs and issues that we've discovered while testing our program so the final project is more refined. It also had us introducing some quality of life changes for the end user. Regarding back end, we introduced new features that will clear the database for users and items so customers can ensure they have a clean slate when starting. We also did ample bug testing and fixed many minor issues we had with routing. We expanded the documentation of the back end as well. We also introduced additional test cases to verify that your program is working as expected. For the front end, we 
 
 Unit tests:
 Unit tests and Cypress tests for front-end:
@@ -62,6 +60,8 @@ updateUserByUsername -- updates the user information based on the Username and J
 
 userSeeder -- Mock users can be generated and inserted into the database based on the requested number of entries
 
+removeAllUsers -- clears all users from the database but keeps the table schema
+
 Inventory API
 
 makeItem -- the function creates a new item tuple in the database through GORM
@@ -85,6 +85,8 @@ updateItemByID -- the function updates the item based on the ID passed through J
 updateItemByName -- the function updates the item based on Name passed through JSON object
 
 inventorySeeder -- Mock items can be generated and inserted into the database based on the requested number of entries
+
+removeAllItems -- clears all items from the database but keeps the table schema
 
 Routing API
 

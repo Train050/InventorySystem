@@ -15,9 +15,11 @@ import (
 	//initializers "inventory-system/initializers"
 
 	//"github.com/mattn/go-sqlite3"
+
 	"github.com/bxcodec/faker/v4"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -209,6 +211,8 @@ func checkToken(inputToken string) (*jwt.Token, error) {
 // modification of the information
 func main() {
 	router := mux.NewRouter()
+
+	handler := cors.AllowAll().Handler(router)
 	//authRouter := router.PathPrefix("/api").Subrouter()
 
 	//opens the SQLite3 database inventory (or creates it if it doesn't exist)
@@ -220,8 +224,8 @@ func main() {
 	}
 
 	//seeds the database with users and items
-	userSeeder(db, 100)
-	inventorySeeder(db, 100)
+	//userSeeder(db, 100)
+	//inventorySeeder(db, 100)
 
 	//create the tables in inventory if they don't already exist
 	db.AutoMigrate(&User{}, &Inventory{})
@@ -274,14 +278,16 @@ func main() {
 
 	//Creating route definitions for registration page (just creating a new user)
 	router.HandleFunc("http://localhost:4200/register", makeUser).Methods("POST")
-	router.HandleFunc("http://localhost:8080/register", makeUser).Methods("POST")
-
-	router.HandleFunc("http://localhost:4200/register", makeUser).Methods("POST")
-	router.HandleFunc("http://localhost:8080/register", makeUser).Methods("POST")
+	router.HandleFunc("http://localhost:4200/api/register", makeUser).Methods("POST")
+	router.HandleFunc("/registration", makeUser).Methods("POST")
+	router.HandleFunc("/api/registration", makeUser).Methods("POST")
 
 	//Creating route definitions for inventory page (waiting for front end to send inventory json)
 	//route for creating a new item
 	router.HandleFunc("http://localhost:4200/inventory", makeItem).Methods("POST")
+	router.HandleFunc("http://localhost:4200/api/inventory", makeItem).Methods("POST")
+	router.HandleFunc("/inventory", makeItem).Methods("POST")
+	router.HandleFunc("/api/inventory", makeItem).Methods("POST")
 
 	//routes for getting the information of items in the inventory
 	/*
@@ -297,25 +303,38 @@ func main() {
 	router.HandleFunc("/inventory/{ProductName}", getItemWithName).Methods("GET")
 	//router.HandleFunc("/inventory/{DateAcquired}", getFirstItemWithDate).Methods("GET")
 	router.HandleFunc("/inventory/{DateAcquired}", getItemsWithDate).Methods("GET")
+	router.HandleFunc("http://localhost:4200/inventory", getAllItems).Methods("GET")
+	router.HandleFunc("http://localhost:4200/api/inventory", getAllItems).Methods("GET")
+
+	router.HandleFunc("/api/inventory/{ID}", getItemWithID).Methods("GET")
+	router.HandleFunc("/api/inventory/{ProductName}", getItemWithName).Methods("GET")
+	//router.HandleFunc("/inventory/{DateAcquired}", getFirstItemWithDate).Methods("GET")
+	router.HandleFunc("/api/inventory/{DateAcquired}", getItemsWithDate).Methods("GET")
 	router.HandleFunc("/inventory", getAllItems).Methods("GET")
+	router.HandleFunc("/api/inventory", getAllItems).Methods("GET")
 
 	//routes for updating the information of items in the inventory
 	router.HandleFunc("/inventory/{ID}", updateItemById).Methods("PUT")
 	router.HandleFunc("/inventory/{ProductName}", updateItemByName).Methods("PUT")
+
+	router.HandleFunc("/api/inventory/{ID}", updateItemById).Methods("PUT")
+	router.HandleFunc("/api/inventory/{ProductName}", updateItemByName).Methods("PUT")
 
 	//routes for deleting items in the inventory
 	router.HandleFunc("/inventory/{ID}", removeItemByID).Methods("DELETE")
 	router.HandleFunc("/inventory/{ProductName}", removeItemByName).Methods("DELETE")
 	//router.HandleFunc("/inventory/removeAll", removeAllItems).Methods("DELETE")
 
+	router.HandleFunc("/api/inventory/{ID}", removeItemByID).Methods("DELETE")
+	router.HandleFunc("/api/inventory/{ProductName}", removeItemByName).Methods("DELETE")
+
 	//Creates the server on port 8080
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }
 
 // Routing calls for the User table
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-
 }
 
 // creates the user based on the input information
@@ -327,6 +346,7 @@ func makeUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, decode.Error(), http.StatusBadRequest)
 		return
 	}
+	w.WriteHeader(http.StatusOK)
 	create := db.Create(&user)
 	if create.Error != nil {
 		http.Error(w, create.Error.Error(), http.StatusInternalServerError)
@@ -665,6 +685,7 @@ func updateItemByName(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(item)
 }
 
+// clears all items from the database but keeps the table schema
 func removeAllItems(db *gorm.DB) {
 	db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&Inventory{})
 }
