@@ -23,7 +23,7 @@ import (
 	"gorm.io/gorm"
 )
 
-//User Database
+// User Database
 type User struct {
 	ID           uint   `gorm:"primaryKey"`
 	Username     string `gorm:"unique; not null"`
@@ -33,7 +33,7 @@ type User struct {
 	HashPassword string
 }
 
-//Inventory Database
+// Inventory Database
 type Inventory struct {
 	ID            uint   `gorm:"primaryKey"`
 	ProductName   string `gorm:"not null"`
@@ -43,7 +43,6 @@ type Inventory struct {
 
 var db *gorm.DB
 var err error
-
 
 // function to seed the database with users
 func userSeeder(database *gorm.DB, entries int) error {
@@ -169,9 +168,9 @@ func userAuthenticator(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("User authenticated"))
 }
 
-//Function to check the validity of the token and return the token
+// Function to check the validity of the token and return the token
 func checkToken(inputToken string) (*jwt.Token, error) {
-		token, err := jwt.ParseWithClaims(inputToken, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(inputToken, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 
 		//checks if the token is valid
 		verified := token.Method.(*jwt.SigningMethodHMAC)
@@ -180,7 +179,7 @@ func checkToken(inputToken string) (*jwt.Token, error) {
 		}
 
 		//secret key to sign the token
-		passKey:= []byte("VerySecretKey")
+		passKey := []byte("VerySecretKey")
 		return passKey, nil
 	})
 
@@ -206,7 +205,7 @@ func checkToken(inputToken string) (*jwt.Token, error) {
 	checked for validity before allowing the user to access the information.
 */
 
-// Still need to implement the authenticaiton middleware into the routing to check creditentials before allowing access and 
+// Still need to implement the authenticaiton middleware into the routing to check creditentials before allowing access and
 // modification of the information
 func main() {
 	router := mux.NewRouter()
@@ -247,23 +246,42 @@ func main() {
 	router.HandleFunc("/login/{ID}", getUserWithID).Methods("GET")
 	router.HandleFunc("/login/{Username}", getUserWithUsername).Methods("GET")
 	router.HandleFunc("/login/{Email}", getUserWithEmail).Methods("GET")
+	router.HandleFunc("/login/{PhoneNumber}", getUserWithEmail).Methods("GET")
 	router.HandleFunc("/login", getAllUsers).Methods("GET")
+
+	router.HandleFunc("/api/login/{ID}", getUserWithID).Methods("GET")
+	router.HandleFunc("/api/login/{Username}", getUserWithUsername).Methods("GET")
+	router.HandleFunc("/api/login/{Email}", getUserWithEmail).Methods("GET")
+	router.HandleFunc("/api/login/{PhoneNumber}", getUserWithEmail).Methods("GET")
+	router.HandleFunc("/api/login", getAllUsers).Methods("GET")
 
 	//routes for updating the user information
 	router.HandleFunc("/login/{ID}", updateUserById).Methods("PUT")
 	router.HandleFunc("/login/{Username}", updateUserByUsername).Methods("PUT")
 
+	router.HandleFunc("/api/login/{ID}", updateUserById).Methods("PUT")
+	router.HandleFunc("/api/login/{Username}", updateUserByUsername).Methods("PUT")
+
 	//routes for deleting the user based on input field (All unique attributes)
 	router.HandleFunc("/login/{ID}", removeUserByID).Methods("DELETE")
 	router.HandleFunc("/login/{Username}", removeUserByUsername).Methods("DELETE")
 	router.HandleFunc("/login/{Email}", removeUserByEmail).Methods("DELETE")
+	//router.HandleFunc("/login/removeAll", removeAllUsers).Methods("DELETE")
+
+	router.HandleFunc("/api/login/{ID}", removeUserByID).Methods("DELETE")
+	router.HandleFunc("/api/login/{Username}", removeUserByUsername).Methods("DELETE")
+	router.HandleFunc("/api/login/{Email}", removeUserByEmail).Methods("DELETE")
 
 	//Creating route definitions for registration page (just creating a new user)
-	router.HandleFunc("/registration", makeUser).Methods("POST")
+	router.HandleFunc("http://localhost:4200/register", makeUser).Methods("POST")
+	router.HandleFunc("http://localhost:8080/register", makeUser).Methods("POST")
+
+	router.HandleFunc("http://localhost:4200/register", makeUser).Methods("POST")
+	router.HandleFunc("http://localhost:8080/register", makeUser).Methods("POST")
 
 	//Creating route definitions for inventory page (waiting for front end to send inventory json)
 	//route for creating a new item
-	router.HandleFunc("/inventory", makeItem).Methods("POST")
+	router.HandleFunc("http://localhost:4200/inventory", makeItem).Methods("POST")
 
 	//routes for getting the information of items in the inventory
 	/*
@@ -277,7 +295,7 @@ func main() {
 	//routes for getting the information of items in the inventory
 	router.HandleFunc("/inventory/{ID}", getItemWithID).Methods("GET")
 	router.HandleFunc("/inventory/{ProductName}", getItemWithName).Methods("GET")
-	router.HandleFunc("/inventory/{DateAcquired}", getFirstItemWithDate).Methods("GET")
+	//router.HandleFunc("/inventory/{DateAcquired}", getFirstItemWithDate).Methods("GET")
 	router.HandleFunc("/inventory/{DateAcquired}", getItemsWithDate).Methods("GET")
 	router.HandleFunc("/inventory", getAllItems).Methods("GET")
 
@@ -288,50 +306,119 @@ func main() {
 	//routes for deleting items in the inventory
 	router.HandleFunc("/inventory/{ID}", removeItemByID).Methods("DELETE")
 	router.HandleFunc("/inventory/{ProductName}", removeItemByName).Methods("DELETE")
+	//router.HandleFunc("/inventory/removeAll", removeAllItems).Methods("DELETE")
 
 	//Creates the server on port 8080
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
-//Routing calls for the User table
+// Routing calls for the User table
 func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	}
+
+}
 
 // creates the user based on the input information
 func makeUser(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	var user User
-	json.NewDecoder(r.Body).Decode(&user)
-	db.Create(&user)
-	fmt.Printf("Created User %v\n", user)
+	decode := json.NewDecoder(r.Body).Decode(&user)
+	if decode != nil {
+		http.Error(w, decode.Error(), http.StatusBadRequest)
+		return
+	}
+	create := db.Create(&user)
+	if create.Error != nil {
+		http.Error(w, create.Error.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // returns the specific user based on the ID
 func getUserWithID(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
-	db.First(&user, vars["ID"])
-	fmt.Printf("Got User: %v\n", user)
+	err := db.Where("ID = ?", vars["ID"]).First(&user)
+	if err != nil {
+		log.Fatalf("No with that ID found.")
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	otherErr := json.NewEncoder(w).Encode(user)
+	if otherErr != nil {
+		log.Fatalf("Couldn't encode user")
+		return
+	}
 }
 
 // returns the specific user based on username
 func getUserWithUsername(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
-	db.First(&user, vars["Username"])
-	fmt.Println(user)
+	err := db.Where("Username = ?", vars["Username"]).First(&user)
+	if err != nil {
+		log.Fatalf("No with that username found.")
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	otherErr := json.NewEncoder(w).Encode(user)
+	if otherErr != nil {
+		log.Fatalf("Couldn't encode user.")
+		return
+	}
+
+	//fmt.Println(user)
+}
+
+// returns the specific user based on phone number
+func getUserWithPhoneNumber(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	vars := mux.Vars(r)
+	var user User
+	err := db.Where("PhoneNumber = ?", vars["PhoneNumber"]).First(&user)
+	if err != nil {
+		log.Fatalf("No with that phone number found")
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	otherErr := json.NewEncoder(w).Encode(user)
+	if otherErr != nil {
+		log.Fatalf("Couldn't encode user")
+		return
+	}
+
+	//fmt.Println(user)
 }
 
 // returns the specific user based on email
 func getUserWithEmail(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
-	db.First(&user, vars["Email"])
-	fmt.Println(user)
+	err := db.Where("Email = ?", vars["Email"]).First(&user)
+	if err != nil {
+		log.Fatalf("No user with that email found.")
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	otherErr := json.NewEncoder(w).Encode(user)
+	if otherErr != nil {
+		log.Fatalf("Couldn't encode user.")
+		return
+	}
 }
 
 // returns all of the users in the database
 func getAllUsers(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	var allUsers []User
 	db.Find(&allUsers)
 	fmt.Println(allUsers)
@@ -341,38 +428,61 @@ func getAllUsers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	resp := allUsers
 	jsonResp, err := json.Marshal(resp)
+
 	if err != nil {
-		log.Fatalf("getAllItems failed to JSON marshal. Err: %s", err)
+		log.Fatalf("getAllUsers failed to JSON marshal. Error: %s", err)
 	}
 	w.Write(jsonResp)
 }
 
 // function to remove the information of the user by ID
 func removeUserByID(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
-	var user User
-	db.Delete(&user, vars["ID"])
-	fmt.Printf("Removed User: %v\n", user)
+	err := db.Where("ID = ?", vars["ID"]).Delete(&User{})
+
+	if err.Error != nil {
+		fmt.Println("User wasn't deleted")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Println("Removed the user")
 }
 
 // function to remove the information of the user by Email
 func removeUserByEmail(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
-	var user User
-	db.Delete(&user, vars["Email"])
-	fmt.Println(user)
+	err := db.Where("Email = ?", vars["Email"]).Delete(&User{})
+
+	if err.Error != nil {
+		fmt.Println("User wasn't deleted")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Println("Removed the user")
 }
 
 // function to remove the information of the user by Username
 func removeUserByUsername(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
-	var user User
-	db.Delete(&user, vars["ID"])
-	fmt.Println(user)
+	err := db.Where("Username = ?", vars["Username"]).Delete(&User{})
+
+	if err.Error != nil {
+		fmt.Println("User wasn't deleted")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Println("Removed the user")
 }
 
 // function to update the information of the user by ID
 func updateUserById(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
 
@@ -388,6 +498,7 @@ func updateUserById(w http.ResponseWriter, r *http.Request) {
 
 // function to update the information of the user by
 func updateUserByUsername(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var user User
 
@@ -401,10 +512,16 @@ func updateUserByUsername(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user)
 }
 
+func removeAllUsers(db *gorm.DB) {
+	//removes all users, regardless of their role (used for redoing the database)
+	db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&User{})
+}
+
 //the routing for the inventory table
 
 // function creates a new item in the Inventory table
 func makeItem(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	var item Inventory
 	json.NewDecoder(r.Body).Decode(&item)
 	db.Create(&item)
@@ -413,30 +530,61 @@ func makeItem(w http.ResponseWriter, r *http.Request) {
 
 // fuction retrieves the information of an item based on its ID
 func getItemWithID(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
-	db.First(&item, vars["ID"])
-	fmt.Printf("Got Item: %v\n", item)
+	err := db.Where("ID = ?", vars["ID"]).First(&item)
+	if err != nil {
+		log.Fatalf("No item with that ID found.")
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	otherErr := json.NewEncoder(w).Encode(item)
+	if otherErr != nil {
+		log.Fatalf("Couldn't encode the Item")
+		return
+	}
 }
 
 // function retrieves the information of an item based on its name
 func getItemWithName(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
-	db.First(&item, vars["ProductName"])
-	fmt.Println(item)
+	err := db.Where("ProductName = ?", vars["ProductName"]).First(&item)
+	if err != nil {
+		log.Fatalf("No item with that name found.")
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	otherErr := json.NewEncoder(w).Encode(item)
+	if otherErr != nil {
+		log.Fatalf("Couldn't encode the Item.")
+		return
+	}
 }
 
 // function retrieves multiple item information based on its date (since it isn't unique)
 func getItemsWithDate(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
-	var items []Inventory
-	db.First(&items, vars["DateAcquired"])
-	fmt.Println(items)
+	var item Inventory
+	err := db.Where("DateAcquired = ?", vars["DateAcquired"]).First(&item)
+	if err != nil {
+		log.Fatalf("No item with that date found.")
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	otherError := json.NewEncoder(w).Encode(item)
+	if otherError != nil {
+		log.Fatalf("Couldn't encode the Item.")
+		return
+	}
 }
 
 // function retrieves the first item information based on its date
 func getFirstItemWithDate(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
 	db.First(&item, vars["DateAcquired"])
@@ -465,22 +613,39 @@ func getAllItems(w http.ResponseWriter, r *http.Request) {
 
 // function removes the tuple that contains the input ID
 func removeItemByID(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
-	db.Delete(&item, vars["ID"])
-	fmt.Printf("Removed Item: %v\n", item)
+	err := db.Where("ID = ?", vars["ID"]).Delete(&item)
+
+	if err.Error != nil {
+		fmt.Println("Item wasn't deleted")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Println("Removed the Item")
 }
 
 // function removes the tuple by the product name
 func removeItemByName(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
-	db.Delete(&item, vars["ProductName"])
-	fmt.Println(item)
+	err := db.Where("Name = ?", vars["Name"]).Delete(&item)
+
+	if err.Error != nil {
+		fmt.Println("Item wasn't deleted")
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Println("Removed the Item")
 }
 
 // function updates the item based on the ID
 func updateItemById(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
 	db.First(&item, vars["ID"])
@@ -491,10 +656,15 @@ func updateItemById(w http.ResponseWriter, r *http.Request) {
 
 // function updates the item based on the item Name
 func updateItemByName(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	vars := mux.Vars(r)
 	var item Inventory
 	db.First(&item, vars["ProductName"])
 	json.NewDecoder(r.Body).Decode(&item)
 	db.Save(&item)
 	fmt.Println(item)
+}
+
+func removeAllItems(db *gorm.DB) {
+	db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&Inventory{})
 }
