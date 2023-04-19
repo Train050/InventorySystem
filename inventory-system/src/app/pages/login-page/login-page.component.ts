@@ -41,7 +41,7 @@ export class LoginPageComponent {
       console.log(response);
       if(response){
         localStorage.setItem('token', response.jwt)
-        this.router.navigate(['profile'])
+        this.router.navigate(['inventory-home-page'])
       }
       this.registerUserName = null
       this.registerEmail = null
@@ -52,15 +52,16 @@ export class LoginPageComponent {
   login(){
     console.log("in login")
     const postData = {
-      email: this.loginEmail,
-      password: this.loginPassword,
+      email: String,
+      password: String
     };
     console.log(postData);
-    this.httpClient.post('http://localhost:8080/login', postData) 
+    this.httpClient.get('http://localhost:8080/login') 
       .subscribe((response: any) => {
+      console.log(response);
       if(response){
         localStorage.setItem('token', response.jwt)
-        this.router.navigate(['profile'])
+        this.router.navigate(['inventory-home-page'])
       }
       this.loginEmail = null
       this.loginPassword = null

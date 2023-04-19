@@ -24,7 +24,7 @@ it('should display the add item dialog', () => {
 });
 
 describe("Post Method", function(){
-  it("Scenario 3", function(){
+  it("Posting to the database", function(){
      cy.request('http://localhost:8080/inventory')
      .its('body') // yields the first element of the returned list
      // make a new post on behalf of the user
