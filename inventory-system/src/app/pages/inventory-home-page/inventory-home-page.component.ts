@@ -6,7 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 import { AddItemComponent } from 'app/pages/inventory-home-page/add-item';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-
+import { Router } from '@angular/router';
 
 export interface UserData {
   ID: number;
@@ -62,7 +62,8 @@ export class InventoryHomePageComponent {
 
  public readonly inventoryItems$: Observable<UserData[]> = this.httpClient.get<UserData[]>('http://localhost:4200/api/inventory');
 
- constructor(public dialog: MatDialog, private readonly httpClient: HttpClient) {
+ constructor(public dialog: MatDialog, private readonly httpClient: HttpClient, private router: Router) {
+    
     // Create 100 users
     const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
 
@@ -90,6 +91,9 @@ export class InventoryHomePageComponent {
     const dialogRef = this.dialog.open(AddItemComponent)
   }
 
+  logout() {
+    this.router.navigate(['/login-page']);
+  }
 }
 
 /** Builds and returns a new User. */
