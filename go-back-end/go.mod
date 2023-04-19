@@ -8,6 +8,8 @@ require (
 	gorm.io/gorm v1.24.5
 )
 
+require github.com/rs/cors v1.9.0 // indirect
+
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // direct
 	golang.org/x/crypto v0.7.0 // direct
