@@ -3,10 +3,17 @@ This sprint has been primarily foucsed on fixing bugs and issues that we've disc
 
 Unit tests:
 Unit tests and Cypress tests for front-end:
-1. AddItemComponent -- testing component template logic
+1. AddItemComponent -- testing component template logic; testing add item dialog
 2. Registration -- test sending the http post request to the backend with the user registration info for encryption and redirect to user homepage.
 3. Login -- test sending the http post request to the backend with user login info for authentication and redirect to user homepage if access is granted.
 4. LoginF -- tests to make sure that the login does not authenticate the user when they input the wrong information (should fail the test).
+5. filter -- tests the filter values
+
+Cypress test
+1. registration -- tests to make sure that the redirect from the registration page to the inventory page works
+2. inventory -- tests that the table is displayed with the inventory items
+            -- tests the add item button and the add item dialog
+            -- tests that add items posts to the database
 
 Unit tests for back-end:    
 TestMakeUser -- Tests creating a user. First tests function call from http request on an empty user with ID = 1, then, manually tests database entry for a fully populated sample user. If an error is thrown at any point during execution, the test fails. If the the final user in the database does not exactly equal the desired test user, the test fails, else, the test passes. This method is not mirrored in future tests, since it will be better to test actual queries from the client in the next sprint.
